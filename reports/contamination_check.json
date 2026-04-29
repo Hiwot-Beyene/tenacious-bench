@@ -1,0 +1,6 @@
+{
+  "n_gram_overlap_flags": 1,
+  "embedding_similarity_flags": 0,
+  "time_shift_flags": 0,
+  "status": "interim_scaffold"
+}
