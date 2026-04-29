@@ -1,0 +1,79 @@
+{
+  "task_id": "tb_wk11_002",
+  "source_mode": "hand_authored_adversarial",
+  "failure_dimension": "bench_alignment",
+  "difficulty": "hard",
+  "partition": "dev",
+  "input_context": {
+    "prospect": {
+      "company": "Substrate Forge",
+      "segment_hint": "specialized_capability",
+      "domain": "substrateforge.example"
+    },
+    "hiring_signal_brief": "Prospect asks for Rust/Substrate support. Bench data does not confirm immediate large-capacity deployment.",
+    "bench_summary": "No explicit Rust/Substrate pool committed for immediate deployment.",
+    "prior_thread": "Inbound ask: Can you place a Rust/Substrate team next week?"
+  },
+  "candidate_output": "Subject: Context: Rust/Substrate capacity check\n\nHello,\n\nI saw your note about Rust/Substrate needs. We should verify exact timeline and role mix before confirming staffing, because I do not want to over-commit capacity from an email.\n\nIf useful, we can do a 15-minute scoping call and confirm fit responsibly.\n\nBest,\nResearch Partner\nTenacious Consulting and Outsourcing\ngettenacious.com",
+  "ground_truth": {
+    "required_signals": [
+      "rust",
+      "substrate"
+    ],
+    "weak_signal": false,
+    "forbid_capacity_commitment": true,
+    "must_ask_when_weak": false
+  },
+  "rubric": {
+    "dimensions": [
+      {
+        "name": "grounding",
+        "description": "References required signal(s) from brief",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "confidence_calibration",
+        "description": "Asks rather than asserts under weak signal",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "tone_safety",
+        "description": "No banned or condescending phrasing",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "bench_safety",
+        "description": "No unsupported capacity commitments",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "format",
+        "description": "Subject/body and ask constraints",
+        "score_range": [
+          1,
+          5
+        ]
+      }
+    ],
+    "weights": {
+      "grounding": 0.28,
+      "confidence_calibration": 0.22,
+      "tone_safety": 0.22,
+      "bench_safety": 0.18,
+      "format": 0.1
+    }
+  },
+  "pass_threshold": 75
+}

@@ -1,0 +1,79 @@
+{
+  "task_id": "tb_wk11_001",
+  "source_mode": "programmatic",
+  "failure_dimension": "signal_reliability",
+  "difficulty": "medium",
+  "partition": "dev",
+  "input_context": {
+    "prospect": {
+      "company": "Contractor Corner",
+      "segment_hint": "abstain",
+      "domain": "contractorcorner.example"
+    },
+    "hiring_signal_brief": "Public pages show exactly 2 open engineering roles. Signal confidence is low; ask rather than assert scale.",
+    "bench_summary": "Python/Data available. Do not commit exact headcount from first cold email.",
+    "prior_thread": "No previous outreach thread."
+  },
+  "candidate_output": "Subject: Question: engineering hiring cadence\n\nHello,\n\nI saw two open engineering roles on your public page, and I may be missing context from the outside. Is this part of a larger hiring push this quarter, or a narrow backfill?\n\nIf useful, we can compare what similar teams did when role count and delivery pressure diverged.\n\nBest,\nResearch Partner\nTenacious Consulting and Outsourcing\ngettenacious.com",
+  "ground_truth": {
+    "required_signals": [
+      "two open engineering roles",
+      "hiring"
+    ],
+    "weak_signal": true,
+    "forbid_capacity_commitment": false,
+    "must_ask_when_weak": true
+  },
+  "rubric": {
+    "dimensions": [
+      {
+        "name": "grounding",
+        "description": "References required signal(s) from brief",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "confidence_calibration",
+        "description": "Asks rather than asserts under weak signal",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "tone_safety",
+        "description": "No banned or condescending phrasing",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "bench_safety",
+        "description": "No unsupported capacity commitments",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "format",
+        "description": "Subject/body and ask constraints",
+        "score_range": [
+          1,
+          5
+        ]
+      }
+    ],
+    "weights": {
+      "grounding": 0.28,
+      "confidence_calibration": 0.22,
+      "tone_safety": 0.22,
+      "bench_safety": 0.18,
+      "format": 0.1
+    }
+  },
+  "pass_threshold": 75
+}

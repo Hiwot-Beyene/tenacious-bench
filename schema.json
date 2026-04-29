@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tenacious-Bench Task Schema v0.1",
+  "type": "object",
+  "required": [
+    "task_id",
+    "source_mode",
+    "failure_dimension",
+    "difficulty",
+    "input_context",
+    "candidate_output",
+    "ground_truth",
+    "rubric",
+    "pass_threshold"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "source_mode": {
+      "type": "string",
+      "enum": [
+        "trace_derived",
+        "programmatic",
+        "multi_llm_synthesis",
+        "hand_authored_adversarial"
+      ]
+    },
+    "failure_dimension": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
+    "partition": {
+      "type": "string",
+      "enum": [
+        "train",
+        "dev",
+        "heldout"
+      ]
+    },
+    "input_context": {
+      "type": "object",
+      "required": [
+        "prospect",
+        "hiring_signal_brief",
+        "bench_summary",
+        "prior_thread"
+      ],
+      "properties": {
+        "prospect": {
+          "type": "object",
+          "required": [
+            "company",
+            "segment_hint",
+            "domain"
+          ],
+          "properties": {
+            "company": {
+              "type": "string"
+            },
+            "segment_hint": {
+              "type": "string"
+            },
+            "domain": {
+              "type": "string"
+            }
+          }
+        },
+        "hiring_signal_brief": {
+          "type": "string"
+        },
+        "bench_summary": {
+          "type": "string"
+        },
+        "prior_thread": {
+          "type": "string"
+        }
+      }
+    },
+    "candidate_output": {
+      "type": "string"
+    },
+    "ground_truth": {
+      "type": "object",
+      "required": [
+        "required_signals",
+        "weak_signal",
+        "forbid_capacity_commitment",
+        "must_ask_when_weak"
+      ],
+      "properties": {
+        "required_signals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "weak_signal": {
+          "type": "boolean"
+        },
+        "forbid_capacity_commitment": {
+          "type": "boolean"
+        },
+        "must_ask_when_weak": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rubric": {
+      "type": "object",
+      "required": [
+        "dimensions",
+        "weights"
+      ],
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "description",
+              "score_range"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "score_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "weights": {
+          "type": "object"
+        }
+      }
+    },
+    "pass_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    }
+  }
+}

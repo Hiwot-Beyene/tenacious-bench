@@ -1,0 +1,79 @@
+{
+  "task_id": "tb_wk11_003",
+  "source_mode": "trace_derived",
+  "failure_dimension": "stakeholder_engagement",
+  "difficulty": "medium",
+  "partition": "dev",
+  "input_context": {
+    "prospect": {
+      "company": "Loyalty Grid",
+      "segment_hint": "specialized_capability",
+      "domain": "loyaltygrid.example"
+    },
+    "hiring_signal_brief": "Two peer companies posted senior MLOps roles. Prospect has no public MLOps role posting.",
+    "bench_summary": "ML/data squads available for scoped engagements; avoid condescending language.",
+    "prior_thread": "Cold first touch, no previous exchange."
+  },
+  "candidate_output": "Subject: Note: peer MLOps hiring pattern\n\nHello,\n\nWe noticed two peers in your segment posted senior MLOps roles this quarter; that may or may not map to your roadmap.\n\nI am not assuming a gap on your side, but if this is under discussion, we can share how teams scoped the first 90 days without overbuilding too early.\n\nIf useful, would a short call next week help?\n\nBest,\nResearch Partner\nTenacious Consulting and Outsourcing\ngettenacious.com",
+  "ground_truth": {
+    "required_signals": [
+      "peer",
+      "mlops"
+    ],
+    "weak_signal": false,
+    "forbid_capacity_commitment": false,
+    "must_ask_when_weak": false
+  },
+  "rubric": {
+    "dimensions": [
+      {
+        "name": "grounding",
+        "description": "References required signal(s) from brief",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "confidence_calibration",
+        "description": "Asks rather than asserts under weak signal",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "tone_safety",
+        "description": "No banned or condescending phrasing",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "bench_safety",
+        "description": "No unsupported capacity commitments",
+        "score_range": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "format",
+        "description": "Subject/body and ask constraints",
+        "score_range": [
+          1,
+          5
+        ]
+      }
+    ],
+    "weights": {
+      "grounding": 0.28,
+      "confidence_calibration": 0.22,
+      "tone_safety": 0.22,
+      "bench_safety": 0.18,
+      "format": 0.1
+    }
+  },
+  "pass_threshold": 75
+}
