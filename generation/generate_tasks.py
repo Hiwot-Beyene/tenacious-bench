@@ -14,16 +14,20 @@ from pathlib import Path
 from typing import Dict, List
 
 CHEAP_MODELS = [
+    # Qwen: good cost/quality for bulk structured generation.
     "qwen/qwen3-next-80b-a3b-instruct",
+    # DeepSeek: different model family improves diversity and supports rotation.
     "deepseek/deepseek-chat",
 ]
 
 
 def pick_generator(i: int) -> str:
+    # Deterministic round-robin keeps runs reproducible and balanced by family.
     return CHEAP_MODELS[i % len(CHEAP_MODELS)]
 
 
 def synthesize_placeholder(seed: int, count: int) -> List[Dict]:
+    # Local RNG prevents global-random side effects and preserves exact reruns.
     rnd = random.Random(seed)
     out = []
     for i in range(count):

@@ -16,6 +16,19 @@ We anchor the design to required reading:
 - **Li et al. (Preference Leakage)**: generation and judging must rotate model families so the same model does not author and judge the same example.
 - **Gebru et al. + Pushkarna et al.**: documentation is treated as a first-class artifact (datasheet with layered detail).
 
+### Short Path Comparison (Why B over A/C)
+
+**Path B chosen (critic/judge tuning)** is the best fit for the observed failure pattern:
+- Week 10 traces show decision inconsistency under weak signals and bench-commitment risk (trace IDs: `3ff9c4f5-c9ab-475c-9c7a-a43d422c4c95`, `85724927-681b-47b5-ba65-a13d705084c6`, `0b9a26be-82fe-4e9f-a7d7-a5b5a21471ac`).
+- Per **Gu et al. (2024/2025)**, decomposed evaluator dimensions are more reliable than single scalar judgment for production gating; this directly supports a critic layer.
+- Per **Li et al. (2025)**, preference leakage can inflate judge confidence; our rotated generator/judge policy is a Path B control, not a Path A generation fix.
+
+Why not Path A first:
+- Path A (SFT generation) mainly improves writing style and phrasing quality, but our highest-severity misses are acceptance/rejection decisions on uncertain evidence.
+
+Why not Path C first:
+- Path C (process reward) is valuable for long-horizon trajectory supervision, but interim evidence points to immediate output-level gating needs with lower implementation cost in Week 11.
+
 ## 3) Partitioning Protocol (50/30/20)
 
 Target dataset size: 200–300 tasks.

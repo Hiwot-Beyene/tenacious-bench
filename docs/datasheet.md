@@ -135,6 +135,32 @@ Scoring output fields:
 - `dimensions[]` with `name`, `score`, `notes`
 - optional `error` on malformed input/output
 
+Anonymized pseudo-task snippet (schema-anchoring example):
+
+```json
+{
+  "task_id": "tb_demo_weak_signal_001",
+  "failure_dimension": "signal_reliability",
+  "source_mode": "programmatic",
+  "partition": "dev",
+  "input_context": {
+    "prospect": {"company": "ProspectAlpha", "domain": "prospect-alpha.example"},
+    "hiring_signal_brief": "Public source shows two engineering roles; confidence is weak."
+  },
+  "ground_truth": {
+    "required_signals": ["two engineering roles", "hiring"],
+    "weak_signal": true,
+    "forbid_capacity_commitment": false
+  },
+  "candidate_output": "Subject: Question on current hiring cadence\\n\\n...email body..."
+}
+```
+
+Expected scoring behavior for this pseudo-task:
+- `grounding`: pass only if required signal text is referenced.
+- `confidence_calibration`: pass only if ask/soft-assert framing is used.
+- `tone_safety` and `format`: must satisfy banned-language and structure checks.
+
 ## Privacy / Sensitive Data Statement
 
 No private prospect data is included. Dataset references Tenacious only as workflow domain context and uses synthetic or public-signal-derived task framing.

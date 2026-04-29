@@ -20,6 +20,7 @@ def iter_jsonl(path: Path) -> Iterable[Dict]:
 
 def key_for(row: Dict) -> str:
     task = row.get("task") or {}
+    # Interim dedup key is prompt text only; later versions can add embeddings.
     return str(task.get("prompt") or "").strip().lower()
 
 
@@ -37,7 +38,7 @@ def main() -> None:
         if k not in seen:
             seen[k] = row
             continue
-        # keep row with higher rubric clarity when present
+        # Tie-break by rubric clarity because it best predicts scoring usability.
         old = seen[k]
         old_c = int(((old.get("judge_scores") or {}).get("rubric_application_clarity") or 0))
         new_c = int(((row.get("judge_scores") or {}).get("rubric_application_clarity") or 0))

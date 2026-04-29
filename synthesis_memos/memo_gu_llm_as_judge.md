@@ -27,3 +27,9 @@ This structure is implemented in `evaluation/scoring_evaluator.py` and is intent
 ## Practical takeaway
 
 For Tenacious-style evaluation, the right judge is not “better scalar scoring”; it is enforceable dimensional decomposition with explicit failure semantics. My disagreement is therefore not with LLM-as-a-judge itself, but with score compression as the default product interface. In this domain, compression hides risk.
+
+## Counterargument and why mine still wins here
+
+A reasonable counterargument is that a single scalar judge score is faster to operate, easier to compare across experiments, and often correlates with human preference in aggregate. That argument is valid for throughput-oriented evaluation dashboards.
+
+For Tenacious-style sales policy enforcement, aggregate correlation is not enough. The business cost is asymmetric: one bench-overcommitment or one condescending stakeholder framing can be disqualifying even if overall writing quality is high. My Week 10 probe and trace evidence indicates these dimensions can fail independently, so dimension-level visibility is required. In this domain, interpretable decomposition provides better risk control than scalar convenience.

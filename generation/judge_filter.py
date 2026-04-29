@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Dict, Iterable, Tuple
 
 THRESHOLDS = {
+    # >=4 keeps only high-confidence candidates while retaining usable volume.
     "input_coherence": 4,
     "ground_truth_verifiability": 4,
     "rubric_application_clarity": 4,
@@ -17,6 +18,7 @@ THRESHOLDS = {
 
 
 def pass_threshold(j: Dict) -> bool:
+    # Missing judge fields default to 0 so malformed rows fail safely.
     return all(int(j.get(k, 0)) >= v for k, v in THRESHOLDS.items())
 
 
@@ -39,6 +41,7 @@ def main() -> None:
     p, q = [], []
     for r in rows:
         judge = r.get("judge_scores") or {}
+        # Keep pass/fail split explicit so maintainers can audit rejected rows.
         (p if pass_threshold(judge) else q).append(r)
 
     for outp, data in ((args.out_pass, p), (args.out_fail, q)):

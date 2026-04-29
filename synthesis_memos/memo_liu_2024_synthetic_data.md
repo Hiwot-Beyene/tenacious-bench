@@ -22,3 +22,9 @@ This keeps synthetic growth tied to diagnostic coverage rather than language div
 ## Practical takeaway
 
 The paper's quality-over-quantity principle is correct; my disagreement is with how easily teams operationalize it as quantity-after-minimal-filtering. In this domain, policy-risk examples are sparse and non-obvious, so synthetic scaling must be subordinated to failure-bucket saturation. For Tenacious-Bench, this is the difference between a benchmark that catches real outreach risk and one that just grades prose quality.
+
+## Counterargument and why mine still wins here
+
+A reasonable counterargument is that larger synthetic volume can improve robustness by broadening lexical and scenario coverage, and that strong judges should filter away low-value examples. I agree this can work in domains where failure costs are more uniform and quality signals are easy to verify.
+
+In Tenacious B2B outreach, the highest-cost errors are sparse, subtle, and business-policy-specific (weak-signal over-assertion, over-commitment, condescending framing). My Week 10 evidence shows these failures persist even in fluent outputs; therefore, additional generic volume has diminishing value unless it is constrained by failure-bucket coverage first. In this domain, targeted constraint saturation dominates raw sample count.
