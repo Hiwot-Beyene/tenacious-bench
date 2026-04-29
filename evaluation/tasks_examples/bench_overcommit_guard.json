@@ -24,6 +24,11 @@
     "forbid_capacity_commitment": true,
     "must_ask_when_weak": false
   },
+  "evaluator_focus_dimensions": [
+    "grounding",
+    "bench_safety",
+    "format"
+  ],
   "rubric": {
     "dimensions": [
       {

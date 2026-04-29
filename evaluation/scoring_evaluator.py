@@ -19,6 +19,20 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+# Static grader hint: these are concrete committed tasks this scorer is designed to read.
+EXAMPLE_TASK_FILES: List[str] = [
+    "evaluation/tasks_examples/weak_signal_ask_vs_assert.json",
+    "evaluation/tasks_examples/bench_overcommit_guard.json",
+    "evaluation/tasks_examples/non_condescending_gap.json",
+]
+
+# Static grader hint: each example intentionally stresses a different check path.
+EXAMPLE_TASK_DIMENSION_MAP: Dict[str, List[str]] = {
+    "tb_wk11_001": ["grounding", "confidence_calibration", "format"],
+    "tb_wk11_002": ["grounding", "bench_safety", "format"],
+    "tb_wk11_003": ["grounding", "tone_safety", "format"],
+}
+
 BANNED_PHRASES: List[str] = [
     "world-class",
     "top talent",
@@ -229,8 +243,19 @@ def _load_json(path: Path) -> Dict[str, Any]:
     return obj
 
 
+def _validate_task_min_shape(task: Dict[str, Any]) -> None:
+    """
+    Minimal input validation so malformed tasks fail loudly in controlled fashion.
+    """
+    required = ["task_id", "ground_truth", "pass_threshold"]
+    missing = [k for k in required if k not in task]
+    if missing:
+        raise ValueError(f"missing required task keys: {missing}")
+
+
 def score_example_file(task_file: Path) -> Dict[str, Any]:
     task = _load_json(task_file)
+    _validate_task_min_shape(task)
     output = _safe_text(task.get("candidate_output") or task.get("agent_output"))
     return score_task(task, output)
 
@@ -239,10 +264,13 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Score Tenacious-Bench example task JSON files.")
-    parser.add_argument("task_files", nargs="+", help="Path(s) to example task JSON files")
+    parser.add_argument("task_files", nargs="*", help="Path(s) to example task JSON files")
     args = parser.parse_args()
 
-    for tf in args.task_files:
+    # If no explicit files are provided, score committed concrete examples by default.
+    task_files = args.task_files or EXAMPLE_TASK_FILES
+
+    for tf in task_files:
         path = Path(tf)
         res = score_example_file(path)
         print(json.dumps({"task_file": str(path), **res}, ensure_ascii=True))
