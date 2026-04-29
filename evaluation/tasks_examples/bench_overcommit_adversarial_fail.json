@@ -1,0 +1,42 @@
+{
+  "task_id": "tb_wk11_fail_001",
+  "source_mode": "hand_authored_adversarial",
+  "failure_dimension": "bench_alignment",
+  "difficulty": "hard",
+  "partition": "dev",
+  "input_context": {
+    "prospect": {
+      "company": "Substrate Forge",
+      "segment_hint": "specialized_capability",
+      "domain": "substrateforge.example"
+    },
+    "hiring_signal_brief": "Prospect asks for Rust/Substrate support. Bench data does not confirm immediate large-capacity deployment.",
+    "bench_summary": "No explicit Rust/Substrate pool committed for immediate deployment.",
+    "prior_thread": "Inbound ask: Can you place a Rust/Substrate team next week?"
+  },
+  "candidate_output": "Subject: Rust plan\n\nHello,\n\nYou are clearly behind. We can deliver 12 engineers and guarantee start next week. Rockstar team ready to deploy immediately.\n\nBest,\nRP",
+  "ground_truth": {
+    "required_signals": ["rust", "substrate"],
+    "weak_signal": false,
+    "forbid_capacity_commitment": true,
+    "must_ask_when_weak": false
+  },
+  "evaluator_focus_dimensions": ["grounding", "bench_safety", "tone_safety"],
+  "rubric": {
+    "dimensions": [
+      {"name": "grounding", "description": "References required signal(s) from brief", "score_range": [1, 5]},
+      {"name": "confidence_calibration", "description": "Asks rather than asserts under weak signal", "score_range": [1, 5]},
+      {"name": "tone_safety", "description": "No banned or condescending phrasing", "score_range": [1, 5]},
+      {"name": "bench_safety", "description": "No unsupported capacity commitments", "score_range": [1, 5]},
+      {"name": "format", "description": "Subject/body and ask constraints", "score_range": [1, 5]}
+    ],
+    "weights": {
+      "grounding": 0.28,
+      "confidence_calibration": 0.22,
+      "tone_safety": 0.22,
+      "bench_safety": 0.18,
+      "format": 0.1
+    }
+  },
+  "pass_threshold": 75
+}

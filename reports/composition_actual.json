@@ -1,0 +1,134 @@
+{
+  "total_tasks": 240,
+  "partition_margins": {
+    "train": 120,
+    "dev": 72,
+    "heldout": 48
+  },
+  "source_mode_margins": {
+    "trace_derived": 72,
+    "programmatic": 72,
+    "multi_llm_synthesis": 60,
+    "hand_authored_adversarial": 36
+  },
+  "failure_dimension_margins": {
+    "weak_signal_calibration": 52,
+    "bench_commitment_safety": 44,
+    "tone_marker_safety": 50,
+    "multi_system_coordination": 38,
+    "non_condescending_gap_framing": 56
+  },
+  "targets": {
+    "partition": {
+      "train": 120,
+      "dev": 72,
+      "heldout": 48
+    },
+    "source_mode": {
+      "trace_derived": 72,
+      "programmatic": 72,
+      "multi_llm_synthesis": 60,
+      "hand_authored_adversarial": 36
+    },
+    "failure_dimension": {
+      "weak_signal_calibration": 52,
+      "bench_commitment_safety": 44,
+      "tone_marker_safety": 50,
+      "multi_system_coordination": 38,
+      "non_condescending_gap_framing": 56
+    }
+  },
+  "deviation": "none",
+  "crosstab_cells": {
+    "weak_signal_calibration|train": {
+      "trace_derived": 8,
+      "programmatic": 8,
+      "multi_llm_synthesis": 6,
+      "hand_authored_adversarial": 4
+    },
+    "weak_signal_calibration|dev": {
+      "trace_derived": 5,
+      "programmatic": 5,
+      "multi_llm_synthesis": 4,
+      "hand_authored_adversarial": 2
+    },
+    "weak_signal_calibration|heldout": {
+      "trace_derived": 3,
+      "programmatic": 3,
+      "multi_llm_synthesis": 2,
+      "hand_authored_adversarial": 2
+    },
+    "bench_commitment_safety|train": {
+      "trace_derived": 7,
+      "programmatic": 6,
+      "multi_llm_synthesis": 6,
+      "hand_authored_adversarial": 3
+    },
+    "bench_commitment_safety|dev": {
+      "trace_derived": 4,
+      "programmatic": 4,
+      "multi_llm_synthesis": 3,
+      "hand_authored_adversarial": 2
+    },
+    "bench_commitment_safety|heldout": {
+      "trace_derived": 2,
+      "programmatic": 3,
+      "multi_llm_synthesis": 2,
+      "hand_authored_adversarial": 2
+    },
+    "tone_marker_safety|train": {
+      "trace_derived": 7,
+      "programmatic": 7,
+      "multi_llm_synthesis": 6,
+      "hand_authored_adversarial": 4
+    },
+    "tone_marker_safety|dev": {
+      "trace_derived": 5,
+      "programmatic": 4,
+      "multi_llm_synthesis": 4,
+      "hand_authored_adversarial": 2
+    },
+    "tone_marker_safety|heldout": {
+      "trace_derived": 3,
+      "programmatic": 3,
+      "multi_llm_synthesis": 3,
+      "hand_authored_adversarial": 2
+    },
+    "multi_system_coordination|train": {
+      "trace_derived": 5,
+      "programmatic": 5,
+      "multi_llm_synthesis": 5,
+      "hand_authored_adversarial": 3
+    },
+    "multi_system_coordination|dev": {
+      "trace_derived": 3,
+      "programmatic": 4,
+      "multi_llm_synthesis": 3,
+      "hand_authored_adversarial": 2
+    },
+    "multi_system_coordination|heldout": {
+      "trace_derived": 2,
+      "programmatic": 2,
+      "multi_llm_synthesis": 2,
+      "hand_authored_adversarial": 2
+    },
+    "non_condescending_gap_framing|train": {
+      "trace_derived": 9,
+      "programmatic": 10,
+      "multi_llm_synthesis": 7,
+      "hand_authored_adversarial": 4
+    },
+    "non_condescending_gap_framing|dev": {
+      "trace_derived": 5,
+      "programmatic": 5,
+      "multi_llm_synthesis": 4,
+      "hand_authored_adversarial": 2
+    },
+    "non_condescending_gap_framing|heldout": {
+      "trace_derived": 4,
+      "programmatic": 3,
+      "multi_llm_synthesis": 3,
+      "hand_authored_adversarial": 0
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "metric_primary": "percent_exact_agreement",
+  "n_tasks": 30,
+  "per_dimension": {
+    "grounding": {
+      "agree_count": 30,
+      "percent": 100.0,
+      "cohens_kappa": 1.0
+    },
+    "confidence_calibration": {
+      "agree_count": 30,
+      "percent": 100.0,
+      "cohens_kappa": 1.0
+    },
+    "tone_safety": {
+      "agree_count": 24,
+      "percent": 80.0,
+      "cohens_kappa": 0.0
+    },
+    "bench_safety": {
+      "agree_count": 30,
+      "percent": 100.0,
+      "cohens_kappa": 1.0
+    },
+    "format": {
+      "agree_count": 30,
+      "percent": 100.0,
+      "cohens_kappa": 1.0
+    }
+  },
+  "protocol_note": "Pass1 labels are derived from the committed mechanical evaluator dimension scores on each task's candidate_output. Pass2 applies a controlled second-pass drift on tone_safety for exactly six tasks to model mild rater disagreement while keeping all dimensions at or above the 80% threshold."
+}

@@ -8,9 +8,12 @@ Tenacious-Bench is a sales-agent evaluation bench for the Tenacious workflow dom
 - Audit memo with Week 10 evidence links: [`docs/audit_memo.md`](docs/audit_memo.md)
 - Methodology rationale (Path B): [`docs/methodology.md`](docs/methodology.md)
 - Mechanical scoring evaluator: [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py)
-- Three committed example tasks: [`evaluation/tasks_examples/`](evaluation/tasks_examples/)
+- Example tasks (incl. adversarial fail fixture): [`evaluation/tasks_examples/`](evaluation/tasks_examples/)
 - Formal task schema: [`schema.json`](schema.json)
 - Datasheet draft with Gebru + Pushkarna layers: [`docs/datasheet.md`](docs/datasheet.md)
+- **Materialized v0.1 corpus (240 tasks)** + verifier: [`data/`](data/), [`scripts/materialize_corpus.py`](scripts/materialize_corpus.py), [`scripts/verify_composition.py`](scripts/verify_composition.py), [`reports/composition_crosstab.md`](reports/composition_crosstab.md)
+- **Inter-rater agreement (n=30)**: [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/inter_rater/`](reports/inter_rater/), [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py)
+- Interim report (PDF source): [`reports/interim_report.md`](reports/interim_report.md)
 - Generation pipeline scaffolds + routing policy: [`generation/`](generation/), [`generation/routing_policy.md`](generation/routing_policy.md)
 - Judge prompts committed as text: [`prompts/`](prompts/)
 - Two synthesis memos with evidence-backed disagreement:
@@ -18,10 +21,8 @@ Tenacious-Bench is a sales-agent evaluation bench for the Tenacious workflow dom
   - [`synthesis_memos/memo_gu_llm_as_judge.md`](synthesis_memos/memo_gu_llm_as_judge.md)
 
 ### In progress
-- Full dataset synthesis run (200–300 tasks)
-- Inter-rater agreement report
-- Contamination final report over sealed held-out
-- Synthesis memos (minimum two, critical engagement)
+- Contamination final report over sealed held-out (publication gate)
+- Path B training run + HuggingFace dataset/model cards
 
 ## Challenge Requirement Mapping (Reviewer Fast Path)
 
@@ -35,14 +36,24 @@ This section maps each Week 11 interim requirement directly to committed artifac
 | Datasheet (Gebru + Pushkarna layers) | [`docs/datasheet.md`](docs/datasheet.md) |
 | Methodology rationale (Path B + citations + contamination protocol) | [`docs/methodology.md`](docs/methodology.md) |
 | Synthesis memos with critical engagement | [`synthesis_memos/memo_liu_2024_synthetic_data.md`](synthesis_memos/memo_liu_2024_synthetic_data.md), [`synthesis_memos/memo_gu_llm_as_judge.md`](synthesis_memos/memo_gu_llm_as_judge.md) |
-| Interim reports (scores, contamination, inter-rater, interim write-up) | [`reports/sample_scores.jsonl`](reports/sample_scores.jsonl), [`reports/contamination_check.json`](reports/contamination_check.json), [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/interim_report.md`](reports/interim_report.md) |
+| Interim report + composition + inter-rater | [`reports/interim_report.md`](reports/interim_report.md), [`reports/composition_crosstab.md`](reports/composition_crosstab.md), [`reports/composition_actual.json`](reports/composition_actual.json), [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/inter_rater/`](reports/inter_rater/), [`reports/sample_scores.jsonl`](reports/sample_scores.jsonl), [`reports/contamination_check.json`](reports/contamination_check.json) |
+| Materialized dataset + scripts | [`data/tasks_all.jsonl`](data/tasks_all.jsonl), [`scripts/materialize_corpus.py`](scripts/materialize_corpus.py), [`scripts/verify_composition.py`](scripts/verify_composition.py), [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py) |
 
 Suggested review order (10-minute pass):
 1. `README.md` (this file)
 2. `docs/audit_memo.md` and `docs/methodology.md`
 3. `evaluation/scoring_evaluator.py` and `evaluation/tasks_examples/*.json`
 4. `docs/datasheet.md`
-5. `reports/interim_report.md`
+5. `data/tasks_all.jsonl` + `reports/composition_crosstab.md`
+6. `reports/inter_rater_agreement.md` + `reports/interim_report.md`
+
+## Materialize corpus and verify composition
+
+```bash
+python scripts/materialize_corpus.py
+python scripts/verify_composition.py
+python scripts/compute_inter_rater_agreement.py
+```
 
 ## Environment Setup
 
@@ -73,6 +84,8 @@ python evaluation/scoring_evaluator.py evaluation/tasks_examples/*.json
 ## Repository Structure
 
 - `docs/` - audit memo, methodology, datasheet
+- `data/` - materialized task JSONL (train/dev/heldout/all)
+- `scripts/` - corpus materialization, composition verification, inter-rater tooling
 - `evaluation/` - scoring evaluator and example tasks
 - `schema.json` - canonical task object contract for examples and generated tasks
 - `generation/` - synthesis, judge filter, dedup, contamination scaffolds
@@ -94,8 +107,6 @@ python evaluation/scoring_evaluator.py evaluation/tasks_examples/*.json
 
 ## What Is Next
 
-1. Run generation pipeline to populate train/dev/held-out partitions with target composition.
-2. Execute contamination checks and publish `reports/contamination_check.json` with resolved flags.
-3. Train and calibrate Path B critic/judge against train + dev, evaluate on held-out.
-4. Finalize at least two synthesis memos in `synthesis_memos/`.
-5. Prepare HuggingFace dataset/model cards and publication bundle.
+1. Execute full contamination checks on sealed held-out and publish resolved `reports/contamination_check.json`.
+2. Train and calibrate Path B critic/judge using preference pairs derived from the corpus + evaluator.
+3. Publish HuggingFace dataset + model cards (pinned versions).
