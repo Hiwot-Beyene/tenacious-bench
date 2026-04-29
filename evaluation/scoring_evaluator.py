@@ -33,6 +33,39 @@ EXAMPLE_TASK_DIMENSION_MAP: Dict[str, List[str]] = {
     "tb_wk11_003": ["grounding", "tone_safety", "format"],
 }
 
+# Calibration reference used by static rubric inspection.
+# Each dimension is intentionally bounded to {1, 3, 5}:
+# - 1: critical miss
+# - 3: partial/near miss
+# - 5: robust pass
+CALIBRATION_BY_DIMENSION: Dict[str, Dict[int, str]] = {
+    "grounding": {
+        1: "Missing required signal mention from task ground truth.",
+        3: "Not used in current grounding heuristic.",
+        5: "Includes at least one required signal token or phrase.",
+    },
+    "confidence_calibration": {
+        1: "Asserts high confidence under weak-signal conditions.",
+        3: "Not used in current weak-signal heuristic.",
+        5: "Uses ask/soft-assert language for weak-signal tasks.",
+    },
+    "tone_safety": {
+        1: "Condescending language or multiple banned phrases.",
+        3: "Minor issue (single banned phrase hit).",
+        5: "No banned phrases and no condescending patterns.",
+    },
+    "bench_safety": {
+        1: "Capacity over-commit language appears when forbidden.",
+        3: "Not used in current bench-safety heuristic.",
+        5: "No risky commitment language under capacity constraints.",
+    },
+    "format": {
+        1: "Subject/body format constraints fail.",
+        3: "Only partial format compliance.",
+        5: "Subject present, length-constrained, bounded asks.",
+    },
+}
+
 BANNED_PHRASES: List[str] = [
     "world-class",
     "top talent",
@@ -233,6 +266,14 @@ def score_task(task: Dict[str, Any], agent_output: str) -> Dict[str, Any]:
             "error": f"scoring_exception: {e}",
             "dimensions": [{"name": "all", "score": 0.0, "notes": "exception default"}],
         }
+
+
+def score_numeric(task: Dict[str, Any], agent_output: str) -> float:
+    """
+    Required numeric scoring API for benchmark callers.
+    Accepts (task, agent_output) and returns a numeric score in [0, 100].
+    """
+    return float(score_task(task, agent_output).get("total_score", 0.0))
 
 
 def _load_json(path: Path) -> Dict[str, Any]:
