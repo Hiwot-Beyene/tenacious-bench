@@ -23,6 +23,27 @@ Tenacious-Bench is a sales-agent evaluation bench for the Tenacious workflow dom
 - Contamination final report over sealed held-out
 - Synthesis memos (minimum two, critical engagement)
 
+## Challenge Requirement Mapping (Reviewer Fast Path)
+
+This section maps each Week 11 interim requirement directly to committed artifacts so the repo can be graded without searching.
+
+| Challenge requirement | Primary artifact(s) |
+|---|---|
+| Audit memo with Week 10 evidence | [`docs/audit_memo.md`](docs/audit_memo.md) |
+| Scoring evaluator with mechanical decomposition + error handling | [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py), [`evaluation/tasks_examples/`](evaluation/tasks_examples/) |
+| Generation pipeline, routing, judge filter | [`generation/generate_tasks.py`](generation/generate_tasks.py), [`generation/judge_filter.py`](generation/judge_filter.py), [`generation/dedup_pairwise.py`](generation/dedup_pairwise.py), [`generation/contamination_check.py`](generation/contamination_check.py), [`generation/routing_policy.md`](generation/routing_policy.md) |
+| Datasheet (Gebru + Pushkarna layers) | [`docs/datasheet.md`](docs/datasheet.md) |
+| Methodology rationale (Path B + citations + contamination protocol) | [`docs/methodology.md`](docs/methodology.md) |
+| Synthesis memos with critical engagement | [`synthesis_memos/memo_liu_2024_synthetic_data.md`](synthesis_memos/memo_liu_2024_synthetic_data.md), [`synthesis_memos/memo_gu_llm_as_judge.md`](synthesis_memos/memo_gu_llm_as_judge.md) |
+| Interim reports (scores, contamination, inter-rater, interim write-up) | [`reports/sample_scores.jsonl`](reports/sample_scores.jsonl), [`reports/contamination_check.json`](reports/contamination_check.json), [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/interim_report.md`](reports/interim_report.md) |
+
+Suggested review order (10-minute pass):
+1. `README.md` (this file)
+2. `docs/audit_memo.md` and `docs/methodology.md`
+3. `evaluation/scoring_evaluator.py` and `evaluation/tasks_examples/*.json`
+4. `docs/datasheet.md`
+5. `reports/interim_report.md`
+
 ## Environment Setup
 
 ### Requirements
