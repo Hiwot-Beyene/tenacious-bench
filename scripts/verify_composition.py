@@ -3,7 +3,7 @@
 Verify materialized corpus matches datasheet marginals and emit cross-tab reports.
 
 Reads data/tasks_train.jsonl, data/tasks_dev.jsonl, data/tasks_heldout.jsonl
-(or --data-dir glob).
+(produced by scripts/build_corpus.py), or --data-dir.
 
 Exit code non-zero on mismatch.
 """
@@ -134,7 +134,7 @@ def main() -> None:
     ]
     for p in paths:
         if not p.exists():
-            raise SystemExit(f"missing {p}; run scripts/materialize_corpus.py first")
+            raise SystemExit(f"missing {p}; run scripts/build_corpus.py first")
 
     rows = list(iter_tasks(paths))
     part_m, src_m, dim_m = margins(rows)

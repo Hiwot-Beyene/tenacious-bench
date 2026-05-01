@@ -3,3 +3,12 @@
 Tenacious Style Guide and 12 Good-Bad Examples v2.md
 TRP1 Challenge Week 11_ Sales Agent Evaluation Bench.md
 *__pycache__*
+
+# Act II package output (single source: data/ + docs/ + reports/)
+tenacious_bench_v0.1/train/
+tenacious_bench_v0.1/dev/
+tenacious_bench_v0.1/held_out/
+tenacious_bench_v0.1/datasheet.md
+tenacious_bench_v0.1/contamination_check.json
+tenacious_bench_v0.1/inter_rater_agreement.md
+tenacious_bench_v0.1/generation_scripts/

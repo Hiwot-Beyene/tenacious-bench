@@ -81,6 +81,10 @@
         },
         "prior_thread": {
           "type": "string"
+        },
+        "internal_capacity_snapshot": {
+          "type": "object",
+          "description": "Slim copy of tenacious_sales_data/seed/bench_summary.json (counts + as_of)."
         }
       }
     },
@@ -110,6 +114,19 @@
         },
         "must_ask_when_weak": {
           "type": "boolean"
+        },
+        "grounding_anchors": {
+          "type": "array",
+          "description": "Phrases that must appear in agent output for named-signal grounding (Style Guide preflight).",
+          "items": { "type": "string" }
+        },
+        "capacity_enforcement": {
+          "type": "object",
+          "description": "Optional cap: scorer fails if output claims more engineers for stack than max_available.",
+          "properties": {
+            "stack": { "type": "string" },
+            "max_available": { "type": "integer" }
+          }
         }
       }
     },
@@ -156,6 +173,22 @@
       "type": "number",
       "minimum": 0,
       "maximum": 100
+    },
+    "coverage": {
+      "type": "object",
+      "description": "Scenario lineage: ICP segment hooks, audit probes, edge-case tags (see bench_corpus/scenario_catalog.py).",
+      "properties": {
+        "edgecase_tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "icp_segment": { "type": ["string", "null"] },
+        "audit_probes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "scenario_catalog_version": { "type": "string" }
+      }
     }
   }
 }

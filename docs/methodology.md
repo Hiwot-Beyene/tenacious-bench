@@ -1,4 +1,4 @@
-# Methodology (Interim): Tenacious-Bench v0.1
+# Methodology: Tenacious-Bench v0.1 (Act II complete)
 
 ## 1) Declared Training Path
 
@@ -43,36 +43,41 @@ Stratification logic:
 - Each partition preserves category distribution so no single split over-represents one failure type.
 - Within category, source-mode quotas are tracked: trace-derived, programmatic sweep, multi-LLM synthesis, hand-authored adversarial.
 
-## 4) Contamination Checks (Interim Pilot Results)
+## 4) Contamination Checks (committed pipeline)
 
-Interim pilot run was executed on a proto pool (n=36 candidate tasks; train/dev/held-out draft split only).
+Canonical script: `generation/contamination_check.py` (CLI: `python scripts/run_contamination_check.py`).
+Report: `reports/contamination_check.json` (copied into `tenacious_bench_v0.1/` by the package builder).
 
-### n-gram overlap check
-- Rule: reject held-out examples with >=8-gram overlap against train.
-- Flags: **4** candidate pairs.
-- Resolution: **2 rewritten**, **2 dropped**.
+**Why inputs differ from a naive n-gram benchmark:** scenario templates repeat across splits; an 8-gram on the *full* anonymized brief collides for almost every pair. The pipeline therefore uses:
 
-### embedding similarity check
-- Rule: cosine similarity >0.85 between held-out and train is flagged.
-- Flags: **3** candidate pairs.
-- Resolution: **1 kept with justification** (same domain entities, different scoring target), **2 dropped**.
+1. **Exact-input leak:** full anonymized input (brief + bench + thread + teaser) must not match train for any held-out or dev row.
+2. **High-entropy 8-grams:** 8-grams on `(company, domain, region, employees_bucket, public_context_teaser)` only — the slice that varies per seed company.
+3. **Embedding proxy:** token-frequency cosine on that same slice; flag train↔held pairs above **0.85**.
+4. **Time-shift:** if the brief or bench contains a four-digit year, `internal_capacity_snapshot.as_of` must be present.
 
-### time-shift verification
-- Rule: tasks with dated public-signal claims must map to documented windows.
-- Flags: **2** candidates (ambiguous event time references).
-- Resolution: **2 rewritten** with explicit time anchors.
-
-Final pilot pass status: **PASS** for provisional held-out slice after rewrite/drop actions.
+Latest run on v0.1 (240 tasks): **pass** — see JSON for counts and `max_cosine_observed`.
 
 ## 5) Inter-rater Agreement Protocol
 
-- Label 30 tasks with full rubric.
-- Re-label same 30 tasks after 24h blind to first labels.
-- Threshold: >=80% agreement per dimension.
-- If any dimension <80%, revise rubric definitions and re-label the same set.
-- Interim status: protocol defined; full agreement matrix to be committed in `reports/inter_rater_agreement.md` after first complete 30-task pass.
+- **Mechanical baseline:** Pass1 = `evaluation/scoring_evaluator.py` on the stratified 30-task subset; Pass2 = identical re-score. Expect **100%** agreement (proves determinism at this commit). Artifacts: `reports/inter_rater_agreement.md`, `reports/inter_rater/*`.
+- **Human Pass2 (Week 11 narrative):** export `reports/inter_rater/tasks_subset_30.jsonl`, label blind, then `python scripts/compute_inter_rater_agreement.py --human-pass2 <file.jsonl>`. Protocol: `docs/inter_rater_human_protocol.md`.
+- Threshold: **≥80%** per dimension vs Pass1; if below, revise rubric and relabel the same 30 tasks.
 
-## 6) Reproducibility and Cost Controls
+## 6) Automated coverage guarantees (Act II hardening)
+
+These scripts close the gap between “catalogued intent” and “verified in the built corpus”:
+
+| Script | Guarantee |
+|--------|-----------|
+| `scripts/verify_audit_probe_coverage.py` | Every `ADV-*` ID in `bench_corpus/audit_probe_registry.py` (from `docs/audit_memo.md`) appears on ≥1 scenario row; catalog probe IDs match the registry set. |
+| `scripts/verify_scenario_catalog_integrity.py` | Every scenario has non-empty `edgecase_tags`, `audit_probes`, and complete `ground_truth` / template fields. |
+| `scripts/verify_materialized_task_coverage.py` | Every materialized task carries `coverage` metadata, includes `internal_capacity_snapshot`, includes every audit probe somewhere in the 240 tasks, satisfies `grounding_anchors` on `candidate_output` when set, and self-scores ≥ pass threshold on `candidate_output`. |
+
+Run them directly or via `python scripts/build_tenacious_bench_v01_package.py --run-checks`.
+
+**Not mechanically graded:** `edgecase_tags` beyond what maps into `scoring_evaluator.py` dimensions remain **documentation and analysis hooks** unless you extend the scorer or add task-local `ground_truth` flags.
+
+## 7) Reproducibility and Cost Controls
 
 - Fixed random seed in generation and dedup scripts.
 - Logged model routing policy and judge thresholds in source + markdown.

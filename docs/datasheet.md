@@ -1,4 +1,4 @@
-# Datasheet for Tenacious-Bench v0.1 (Interim)
+# Datasheet for Tenacious-Bench v0.1
 
 ## Telescopic Summary (Pushkarna Layer 1)
 
@@ -53,14 +53,14 @@ Data sources:
 - Tenacious seed documents (style guide, case studies, pricing, discovery transcripts)
 
 Authoring pipeline:
-1. Generate candidates across four source modes.
-2. Apply judge-filter scoring (coherence, verifiability, rubric clarity).
-3. Deduplicate via pairwise near-duplicate checks.
-4. Apply contamination checks before sealing held-out.
+1. Generate candidates across four source modes (`scripts/build_corpus.py` + `bench_corpus/`).
+2. Apply judge-filter scoring where LLM synthesis is used; programmatic tasks are deterministic from the scenario catalog.
+3. Deduplicate via pairwise near-duplicate checks when expanding synthesis pools (`generation/dedup_pairwise.py`).
+4. Run contamination checks before release (`generation/contamination_check.py` → `reports/contamination_check.json`).
 
 Human roles:
-- One primary author/labeler for interim pass
-- Planned second-pass relabel for agreement checks (24h delayed)
+- Optional blind second-pass labels on the 30-task subset (`docs/inter_rater_human_protocol.md`).
+- Mechanical inter-rater default documents evaluator determinism (Pass2 = replay of Pass1).
 
 ## 4) Preprocessing / Cleaning / Labeling (Gebru)
 
@@ -70,8 +70,14 @@ Human roles:
 - Label rubric dimensions with bounded 1–5 scales and machine-checkable constraints
 
 Inter-rater protocol:
-- 30-task re-label audit after 24h, target >=80% agreement per dimension
+- 30-task stratified subset; mechanical replay yields 100% agreement at a fixed commit
+- Optional human Pass2 for blind relabel; target ≥80% agreement per dimension
 - If under threshold, revise rubric definitions and relabel
+
+### Contamination report (v1.1 schema)
+
+- **Canonical path:** `reports/contamination_check.json` (also copied into the Act II package folder by `scripts/build_tenacious_bench_v01_package.py`).
+- **Status:** `pass` when there are no exact anonymized-input collisions (train vs held-out / train vs dev), no high-entropy 8-gram overlaps, no embedding pairs above the cosine threshold, and no time-shift flags.
 
 ## 5) Uses (Gebru)
 
@@ -105,6 +111,7 @@ Governance checks per release:
 - contamination report refresh
 - rubric drift review
 - inter-rater agreement refresh on a sampled subset
+- `verify_audit_probe_coverage.py`, `verify_scenario_catalog_integrity.py`, `verify_materialized_task_coverage.py` (probe registry ↔ catalog ↔ built JSONL)
 
 ## Periscopic Overview (Pushkarna Layer 2)
 
@@ -117,15 +124,13 @@ Core artifacts and their role:
 
 ## Microscopic Documentation (Pushkarna Layer 3)
 
-Task object fields (interim schema shape):
+Task object fields (schema shape):
 - `task_id`
 - `failure_dimension`
 - `source_mode`
-- `input_context`
-- `required_signals`
-- `weak_signal`
-- `forbid_capacity_commitment`
-- `agent_output`
+- `input_context` (includes optional `internal_capacity_snapshot`)
+- `ground_truth` (`required_signals`, `weak_signal`, `forbid_capacity_commitment`, optional `grounding_anchors`, `capacity_enforcement`)
+- `candidate_output`
 - `rubric`
 - `partition`
 

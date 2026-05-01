@@ -36,10 +36,20 @@ EXAMPLE_TASK_DIMENSION_MAP: Dict[str, List[str]] = {
 # Explicit rubric decomposition for static source inspection.
 # Each dimension is mapped to concrete mechanical checks implemented below.
 RUBRIC_DIMENSION_CHECKS: Dict[str, List[str]] = {
-    "grounding": ["required_signals presence via _has_required_signal"],
+    "grounding": [
+        "required_signals presence via _has_required_signal",
+        "optional named anchors via _grounding_anchors_satisfied",
+    ],
     "confidence_calibration": ["weak_signal ask-vs-assert via _ask_not_assert_for_weak_signal"],
-    "tone_safety": ["banned phrase count via _count_banned", "regex pattern screen via _contains_condescending"],
-    "bench_safety": ["capacity commitment phrase screen when forbid_capacity_commitment=true"],
+    "tone_safety": [
+        "banned phrase count via _count_banned",
+        "regex pattern screen via _contains_condescending",
+        "style-guide bench word ban via _prospect_facing_bench_word",
+    ],
+    "bench_safety": [
+        "capacity commitment phrase screen when forbid_capacity_commitment=true",
+        "optional snapshot numeric cap via _snapshot_capacity_claim_violation (per-stack regex)",
+    ],
     "format": ["subject regex parse via SUBJECT_RE", "body length and question-count constraints via _format_checks"],
 }
 
@@ -50,9 +60,9 @@ RUBRIC_DIMENSION_CHECKS: Dict[str, List[str]] = {
 # - 5: robust pass
 CALIBRATION_BY_DIMENSION: Dict[str, Dict[int, str]] = {
     "grounding": {
-        1: "Missing required signal mention from task ground truth.",
-        3: "Not used in current grounding heuristic.",
-        5: "Includes at least one required signal token or phrase.",
+        1: "Missing required signals and/or named grounding anchors.",
+        3: "Partial grounding: only required signals or only named anchors.",
+        5: "Required signals present and named anchors satisfied when specified.",
     },
     "confidence_calibration": {
         1: "Asserts high confidence under weak-signal conditions.",
@@ -60,14 +70,14 @@ CALIBRATION_BY_DIMENSION: Dict[str, Dict[int, str]] = {
         5: "Uses ask/soft-assert language for weak-signal tasks.",
     },
     "tone_safety": {
-        1: "Condescending language or multiple banned phrases.",
+        1: "Condescending language, multiple banned phrases, prospect-facing 'bench', or style-guide hard fail.",
         3: "Minor issue (single banned phrase hit).",
-        5: "No banned phrases and no condescending patterns.",
+        5: "No banned phrases, no condescending patterns, no prospect-facing 'bench'.",
     },
     "bench_safety": {
-        1: "Capacity over-commit language appears when forbidden.",
+        1: "Capacity over-commit when forbidden, or numeric stack claim above snapshot cap.",
         3: "Not used in current bench-safety heuristic.",
-        5: "No risky commitment language under capacity constraints.",
+        5: "No risky commitment language and no snapshot-cap violation.",
     },
     "format": {
         1: "Subject/body format constraints fail.",
@@ -76,17 +86,32 @@ CALIBRATION_BY_DIMENSION: Dict[str, Dict[int, str]] = {
     },
 }
 
+# Aligned to Tenacious Style Guide v2 + tenacious_sales_data/seed/style_guide.md banned list.
 BANNED_PHRASES: List[str] = [
     "world-class",
     "top talent",
+    "a-players",
     "rockstar",
     "ninja",
     "wizard",
     "synergy",
+    "synergize",
     "quick chat",
+    "quick question",
     "i hope this email finds you well",
     "just following up",
     "circling back",
+    "game-changer",
+    "disruptor",
+    "paradigm shift",
+    "10x",
+    "supercharge",
+    "skyrocket",
+    "per my last email",
+    "don't miss out",
+    "you'll regret",
+    "our proprietary",
+    "ai-powered",
 ]
 
 SOFT_ASSERTION_MARKERS: List[str] = [
@@ -146,6 +171,11 @@ def _contains_condescending(text: str) -> bool:
     return any(re.search(p, low) for p in CONDESCENDING_PATTERNS)
 
 
+def _prospect_facing_bench_word(text: str) -> bool:
+    """Style guide: word 'bench' must not appear in prospect-facing copy (use whole-word match; not 'benchmark')."""
+    return bool(re.search(r"(?i)\bbench\b", text))
+
+
 def _task_constraints(task: Dict[str, Any]) -> Dict[str, Any]:
     """
     Backward-compatible accessor:
@@ -156,6 +186,16 @@ def _task_constraints(task: Dict[str, Any]) -> Dict[str, Any]:
     if isinstance(gt, dict):
         return gt
     return task
+
+
+def _grounding_anchors_satisfied(task: Dict[str, Any], text: str) -> bool:
+    """Style-guide style: if ground_truth.grounding_anchors is set, each must appear (substring, case-insensitive)."""
+    gt = _task_constraints(task)
+    anchors = gt.get("grounding_anchors")
+    if not isinstance(anchors, list) or not anchors:
+        return True
+    low = text.lower()
+    return all(str(a).lower() in low for a in anchors if str(a).strip())
 
 
 def _has_required_signal(task: Dict[str, Any], text: str) -> bool:
@@ -176,6 +216,44 @@ def _ask_not_assert_for_weak_signal(task: Dict[str, Any], text: str) -> bool:
     has_soft = any(m in low for m in SOFT_ASSERTION_MARKERS)
     hard_assert = any(x in low for x in ["clearly scaling", "aggressive hiring", "you are scaling fast"])
     return has_soft and not hard_assert
+
+
+# Stack key from capacity_enforcement.stack -> regex for "N <stack> engineers" style claims
+_CAPACITY_CLAIM_PATTERNS: Dict[str, str] = {
+    "go": r"(\d+)\s+(?:golang|go)\b",
+    "python": r"(\d+)\s+python(?:\s+engineers?|\s+developers?)?\b",
+    "data": r"(\d+)\s+data\s+engineers?\b",
+    "ml": r"(\d+)\s+(?:ml|machine\s+learning)(?:\s+engineers?)?\b",
+    "infra": r"(\d+)\s+infra(?:structure)?(?:\s+engineers?)?\b",
+    "frontend": r"(\d+)\s+frontend(?:\s+engineers?)?\b",
+}
+
+
+def _snapshot_capacity_claim_violation(task: Dict[str, Any], text: str) -> bool:
+    """
+    If ground_truth.capacity_enforcement is set, fail when email claims more engineers
+    for that stack than max_available (numeric pattern per stack key).
+    """
+    gt = _task_constraints(task)
+    ce = gt.get("capacity_enforcement")
+    if not isinstance(ce, dict):
+        return False
+    try:
+        mx = int(ce.get("max_available", 0))
+    except (TypeError, ValueError):
+        return False
+    stack = str(ce.get("stack") or "").strip().lower()
+    pat_str = _CAPACITY_CLAIM_PATTERNS.get(stack)
+    if not pat_str:
+        return False
+    low = text.lower()
+    for m in re.finditer(pat_str, low):
+        try:
+            if int(m.group(1)) > mx:
+                return True
+        except ValueError:
+            continue
+    return False
 
 
 def _format_checks(subject: str, body: str) -> Tuple[float, str]:
@@ -214,11 +292,15 @@ def score_task(task: Dict[str, Any], agent_output: str) -> Dict[str, Any]:
 
         dims: List[DimensionResult] = []
 
-        # 1) Grounding / required evidence
-        if _has_required_signal(task, full_text):
-            dims.append(DimensionResult("grounding", 5.0, "required signal present"))
+        # 1) Grounding / required evidence + optional named anchors
+        sig_ok = _has_required_signal(task, full_text)
+        anc_ok = _grounding_anchors_satisfied(task, full_text)
+        if sig_ok and anc_ok:
+            dims.append(DimensionResult("grounding", 5.0, "required signal + anchors present"))
+        elif sig_ok or anc_ok:
+            dims.append(DimensionResult("grounding", 3.0, "partial grounding (signal or anchors only)"))
         else:
-            dims.append(DimensionResult("grounding", 1.0, "required signal missing"))
+            dims.append(DimensionResult("grounding", 1.0, "grounding miss"))
 
         # 2) Weak-signal confidence behavior
         if _ask_not_assert_for_weak_signal(task, full_text):
@@ -226,10 +308,13 @@ def score_task(task: Dict[str, Any], agent_output: str) -> Dict[str, Any]:
         else:
             dims.append(DimensionResult("confidence_calibration", 1.0, "asserted on weak signal"))
 
-        # 3) Tone safety (banned + condescending)
+        # 3) Tone safety (banned + condescending + no prospect-facing "bench")
         banned_hits = _count_banned(full_text)
         condescending = _contains_condescending(full_text)
-        if banned_hits == 0 and not condescending:
+        bad_bench = _prospect_facing_bench_word(full_text)
+        if bad_bench:
+            dims.append(DimensionResult("tone_safety", 1.0, "style-guide violation: prospect-facing 'bench'"))
+        elif banned_hits == 0 and not condescending:
             dims.append(DimensionResult("tone_safety", 5.0, "tone safety pass"))
         elif banned_hits <= 1 and not condescending:
             dims.append(DimensionResult("tone_safety", 3.0, f"minor tone issue ({banned_hits} banned hit)"))
@@ -242,11 +327,26 @@ def score_task(task: Dict[str, Any], agent_output: str) -> Dict[str, Any]:
         if bool(constraints.get("forbid_capacity_commitment", False)):
             low = full_text.lower()
             risky = any(x in low for x in ["we can deliver 12", "ready to deploy immediately", "guarantee start next week"])
-            dims.append(
-                DimensionResult("bench_safety", 1.0 if risky else 5.0, "capacity over-commit detected" if risky else "bench-safe")
-            )
+            snap_bad = _snapshot_capacity_claim_violation(task, full_text)
+            if risky or snap_bad:
+                note = "capacity over-commit detected"
+                if snap_bad and not risky:
+                    note = "claimed stack headcount exceeds internal snapshot cap"
+                dims.append(DimensionResult("bench_safety", 1.0, note))
+            else:
+                dims.append(DimensionResult("bench_safety", 5.0, "bench-safe"))
         else:
-            dims.append(DimensionResult("bench_safety", 5.0, "not constrained"))
+            snap_bad = _snapshot_capacity_claim_violation(task, full_text)
+            if snap_bad:
+                dims.append(
+                    DimensionResult(
+                        "bench_safety",
+                        1.0,
+                        "claimed stack headcount exceeds internal snapshot cap",
+                    )
+                )
+            else:
+                dims.append(DimensionResult("bench_safety", 5.0, "not constrained"))
 
         # 5) Format constraints
         fscore, fnote = _format_checks(subject, body)

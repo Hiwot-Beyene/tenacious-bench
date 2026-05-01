@@ -1,9 +1,13 @@
-"""Task synthesis orchestrator (interim scaffold).
+"""Optional OpenRouter bulk synthesis (Week 11 extension).
 
-Intended run shape:
-- load seed traces/probes
-- route generation across cheap-tier models with deterministic seed
-- emit raw task candidates to JSONL
+The committed v0.1 evaluation corpus is **not** produced by this module. It is built
+deterministically from real company seeds (Crunchbase ODM + Conversion Engine
+workspaces) and a scenario library:
+
+  python scripts/build_corpus.py
+
+See `bench_corpus/scenarios.py` for edge-case templates and `generation/routing_policy.md`
+for model rotation when you add LLM-generated candidates.
 """
 from __future__ import annotations
 
@@ -14,20 +18,16 @@ from pathlib import Path
 from typing import Dict, List
 
 CHEAP_MODELS = [
-    # Qwen: good cost/quality for bulk structured generation.
     "qwen/qwen3-next-80b-a3b-instruct",
-    # DeepSeek: different model family improves diversity and supports rotation.
     "deepseek/deepseek-chat",
 ]
 
 
 def pick_generator(i: int) -> str:
-    # Deterministic round-robin keeps runs reproducible and balanced by family.
     return CHEAP_MODELS[i % len(CHEAP_MODELS)]
 
 
 def synthesize_placeholder(seed: int, count: int) -> List[Dict]:
-    # Local RNG prevents global-random side effects and preserves exact reruns.
     rnd = random.Random(seed)
     out = []
     for i in range(count):
@@ -37,14 +37,16 @@ def synthesize_placeholder(seed: int, count: int) -> List[Dict]:
                 "source_mode": "multi_llm_synthesis",
                 "generator_model": pick_generator(i),
                 "difficulty": rnd.choice(["easy", "medium", "hard"]),
-                "task": {"prompt": "TODO: generated task"},
+                "task": {"prompt": "TODO: wire OpenRouter + judge_filter for new candidates"},
             }
         )
     return out
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Placeholder OpenRouter synthesis CLI — use scripts/build_corpus.py for v0.1 shards.",
+    )
     ap.add_argument("--out", required=True)
     ap.add_argument("--count", type=int, default=20)
     ap.add_argument("--seed", type=int, default=11711)

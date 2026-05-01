@@ -1,6 +1,7 @@
 {
   "metric_primary": "percent_exact_agreement",
   "n_tasks": 30,
+  "pass2_mode": "mechanical_replay",
   "per_dimension": {
     "grounding": {
       "agree_count": 30,
@@ -13,9 +14,9 @@
       "cohens_kappa": 1.0
     },
     "tone_safety": {
-      "agree_count": 24,
-      "percent": 80.0,
-      "cohens_kappa": 0.0
+      "agree_count": 30,
+      "percent": 100.0,
+      "cohens_kappa": 1.0
     },
     "bench_safety": {
       "agree_count": 30,
@@ -28,5 +29,5 @@
       "cohens_kappa": 1.0
     }
   },
-  "protocol_note": "Pass1 labels are derived from the committed mechanical evaluator dimension scores on each task's candidate_output. Pass2 applies a controlled second-pass drift on tone_safety for exactly six tasks to model mild rater disagreement while keeping all dimensions at or above the 80% threshold."
+  "protocol_note": "Pass2 is a mechanical replay of Pass1 (same code path). 100% agreement is the expected outcome and indicates evaluator determinism. For the Week 11 human relabel protocol, score the exported tasks without viewing Pass1, then merge via `--human-pass2`. See `docs/inter_rater_human_protocol.md`."
 }

@@ -14,7 +14,7 @@
     "bench_summary": "ML/data squads available for scoped engagements; avoid condescending language.",
     "prior_thread": "Cold first touch, no previous exchange."
   },
-  "candidate_output": "Subject: Note: peer MLOps hiring pattern\n\nHello,\n\nWe noticed two peers in your segment posted senior MLOps roles this quarter; that may or may not map to your roadmap.\n\nI am not assuming a gap on your side, but if this is under discussion, we can share how teams scoped the first 90 days without overbuilding too early.\n\nIf useful, would a short call next week help?\n\nBest,\nResearch Partner\nTenacious Consulting and Outsourcing\ngettenacious.com",
+  "candidate_output": "Subject: Note: peer MLOps hiring pattern\n\nHello,\n\nWe noticed two peers in your segment posted senior MLOps roles this quarter; that may or may not map to your roadmap.\n\nI am not assuming a gap on your side, but if this is under discussion, we can share how teams scoped the first 90 days without overbuilding too early.\n\nIf useful, would a short call next week help?\n\nBest,\nResearch Partner\nTenacious Intelligence Corporation\ngettenacious.com",
   "ground_truth": {
     "required_signals": [
       "peer",

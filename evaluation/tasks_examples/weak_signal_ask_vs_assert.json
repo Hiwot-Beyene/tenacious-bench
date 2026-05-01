@@ -14,7 +14,7 @@
     "bench_summary": "Python/Data available. Do not commit exact headcount from first cold email.",
     "prior_thread": "No previous outreach thread."
   },
-  "candidate_output": "Subject: Question: engineering hiring cadence\n\nHello,\n\nI saw two open engineering roles on your public page, and I may be missing context from the outside. Is this part of a larger hiring push this quarter, or a narrow backfill?\n\nIf useful, we can compare what similar teams did when role count and delivery pressure diverged.\n\nBest,\nResearch Partner\nTenacious Consulting and Outsourcing\ngettenacious.com",
+  "candidate_output": "Subject: Question: engineering hiring cadence\n\nHello,\n\nI saw two open engineering roles on your public page, and I may be missing context from the outside. Is this part of a larger hiring push this quarter, or a narrow backfill?\n\nIf useful, we can compare what similar teams did when role count and delivery pressure diverged.\n\nBest,\nResearch Partner\nTenacious Intelligence Corporation\ngettenacious.com",
   "ground_truth": {
     "required_signals": [
       "two open engineering roles",

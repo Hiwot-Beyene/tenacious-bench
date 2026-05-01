@@ -14,7 +14,7 @@
     "bench_summary": "No explicit Rust/Substrate pool committed for immediate deployment.",
     "prior_thread": "Inbound ask: Can you place a Rust/Substrate team next week?"
   },
-  "candidate_output": "Subject: Context: Rust/Substrate capacity check\n\nHello,\n\nI saw your note about Rust/Substrate needs. We should verify exact timeline and role mix before confirming staffing, because I do not want to over-commit capacity from an email.\n\nIf useful, we can do a 15-minute scoping call and confirm fit responsibly.\n\nBest,\nResearch Partner\nTenacious Consulting and Outsourcing\ngettenacious.com",
+  "candidate_output": "Subject: Context: Rust/Substrate capacity check\n\nHello,\n\nI saw your note about Rust/Substrate needs. We should verify exact timeline and role mix before confirming staffing, because I do not want to over-commit capacity from an email.\n\nIf useful, we can do a 15-minute scoping call and confirm fit responsibly.\n\nBest,\nResearch Partner\nTenacious Intelligence Corporation\ngettenacious.com",
   "ground_truth": {
     "required_signals": [
       "rust",
