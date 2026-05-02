@@ -1,16 +1,20 @@
-"""Pointwise judge filter scaffold for candidate tasks.
+"""Pointwise judge filter for candidate tasks (1–5 scale, inclusion >=4 on each dimension).
 
-Applies threshold policy on three dimensions and emits accepted/rejected sets.
+Aligned with `prompts/judge_pointwise.md`. Input rows must carry `judge_scores`:
+`input_coherence`, `ground_truth_verifiability`, `rubric_application_clarity`.
+
+Emits accepted/rejected JSONL; rejected rows preserve `fail_reasons` when present or synthesize
+short reasons from scores vs thresholds.
 """
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Iterable, List
 
 THRESHOLDS = {
-    # >=4 keeps only high-confidence candidates while retaining usable volume.
+    # Documented inclusion policy (see `generation/routing_policy.md`).
     "input_coherence": 4,
     "ground_truth_verifiability": 4,
     "rubric_application_clarity": 4,
@@ -20,6 +24,15 @@ THRESHOLDS = {
 def pass_threshold(j: Dict) -> bool:
     # Missing judge fields default to 0 so malformed rows fail safely.
     return all(int(j.get(k, 0)) >= v for k, v in THRESHOLDS.items())
+
+
+def _synth_fail_reasons(judge: Dict) -> List[str]:
+    out: List[str] = []
+    for k, need in THRESHOLDS.items():
+        got = int(judge.get(k, 0))
+        if got < need:
+            out.append(f"{k}: {got} < {need}")
+    return out
 
 
 def iter_jsonl(path: Path) -> Iterable[Dict]:
@@ -41,8 +54,15 @@ def main() -> None:
     p, q = [], []
     for r in rows:
         judge = r.get("judge_scores") or {}
-        # Keep pass/fail split explicit so maintainers can audit rejected rows.
-        (p if pass_threshold(judge) else q).append(r)
+        ok = pass_threshold(judge)
+        if not ok:
+            reasons = r.get("fail_reasons")
+            if not reasons:
+                r = dict(r)
+                r["fail_reasons"] = _synth_fail_reasons(judge)
+            q.append(r)
+        else:
+            p.append(r)
 
     for outp, data in ((args.out_pass, p), (args.out_fail, q)):
         out = Path(outp)

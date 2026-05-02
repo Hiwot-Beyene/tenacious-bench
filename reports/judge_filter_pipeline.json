@@ -1,0 +1,14 @@
+{
+  "n_tasks": 240,
+  "n_accept": 233,
+  "n_reject": 7,
+  "n_eval_calibration_slots": 50,
+  "calibration_cap": 50,
+  "thresholds": {
+    "input_coherence": 4,
+    "ground_truth_verifiability": 4,
+    "rubric_application_clarity": 4
+  },
+  "eval_tier_judge_model": "openai/gpt-5",
+  "generated_at_utc": "2026-05-01T17:49:05Z"
+}

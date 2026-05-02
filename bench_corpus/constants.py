@@ -3,6 +3,16 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
+# Train split source-mode share targets (marginal over all failure dimensions, 120 train rows):
+#   trace_derived ≈ 30%, programmatic ≈ 30%, multi_llm_synthesis ≈ 25%, hand_authored_adversarial ≈ 15%.
+# Counts per cell are integers; `scripts/verify_composition.py` checks realized partitions.
+SOURCE_MODE_TRAIN_SHARE_TARGETS = {
+    "trace_derived": 0.30,
+    "programmatic": 0.30,
+    "multi_llm_synthesis": 0.25,
+    "hand_authored_adversarial": 0.15,
+}
+
 # (failure_dimension, partition) -> source_mode -> count
 CELL_COUNTS: Dict[str, Dict[str, Dict[str, int]]] = {
     "weak_signal_calibration": {

@@ -1,6 +1,9 @@
-"""Near-duplicate resolver scaffold.
+"""Near-duplicate resolver: pairwise preference when `judge_scores` exist.
 
-Uses simple text hashing + pairwise preference metadata when available.
+Tie-break order (matches `generation/routing_policy.md`):
+1) rubric_application_clarity
+2) ground_truth_verifiability
+3) longer candidate_output (proxy for rationale coverage)
 """
 from __future__ import annotations
 
@@ -20,8 +23,14 @@ def iter_jsonl(path: Path) -> Iterable[Dict]:
 
 def key_for(row: Dict) -> str:
     task = row.get("task") or {}
-    # Interim dedup key is prompt text only; later versions can add embeddings.
-    return str(task.get("prompt") or "").strip().lower()
+    prompt = str(task.get("prompt") or "").strip().lower()
+    if prompt:
+        return prompt
+    ic = row.get("input_context") or {}
+    pr = ic.get("prospect") or {}
+    brief = str(ic.get("hiring_signal_brief") or "")[:240]
+    parts = [str(row.get("failure_dimension")), str(pr.get("domain")), brief]
+    return "|".join(parts).strip().lower()
 
 
 def main() -> None:
@@ -38,11 +47,15 @@ def main() -> None:
         if k not in seen:
             seen[k] = row
             continue
-        # Tie-break by rubric clarity because it best predicts scoring usability.
         old = seen[k]
-        old_c = int(((old.get("judge_scores") or {}).get("rubric_application_clarity") or 0))
-        new_c = int(((row.get("judge_scores") or {}).get("rubric_application_clarity") or 0))
-        if new_c > old_c:
+        jo, jn = old.get("judge_scores") or {}, row.get("judge_scores") or {}
+        old_c = int(jo.get("rubric_application_clarity") or 0)
+        new_c = int(jn.get("rubric_application_clarity") or 0)
+        old_v = int(jo.get("ground_truth_verifiability") or 0)
+        new_v = int(jn.get("ground_truth_verifiability") or 0)
+        old_len = len(str(old.get("candidate_output") or ""))
+        new_len = len(str(row.get("candidate_output") or ""))
+        if (new_c, new_v, new_len) > (old_c, old_v, old_len):
             seen[k] = row
 
     out = Path(args.out_file)

@@ -18,7 +18,7 @@ A literal **8-gram on full task inputs** is a poor gate for **template-built** d
 
 ## Evidence
 
-Latest report: `reports/contamination_check.json` (`schema_version` 1.1, status `pass` on v0.1).
+Latest report: `reports/contamination_check.json` (`schema_version` 1.2, status `pass` on v0.1; held-out checked vs train **and** dev).
 
 ## Takeaway
 

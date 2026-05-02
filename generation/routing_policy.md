@@ -1,38 +1,45 @@
-# Multi-LLM Routing Policy (Interim v0.1)
+# Multi-LLM Routing Policy (v0.1)
 
 ## Objective
-Prevent preference leakage while producing diverse, verifiable Tenacious-Bench tasks.
+Prevent **preference leakage** (Li et al., 2025, arXiv:2502.01534) while producing diverse, verifiable Tenacious-Bench tasks.
 
-## Model Families
-- **Cheap-tier generation (bulk):** `qwen/qwen3-next-80b-a3b-instruct`, `deepseek/deepseek-chat`.
-- **Eval-tier calibration only (small sample):** `anthropic/claude-sonnet-4.6`, `openai/gpt-5` (or configured equivalent).
-- **Judge model family:** must differ from generator family for each example.
+## Role assignment (named model ids)
+Canonical constants live in `generation/model_routing.py`.
 
-## Rotation Rule
-For each generated task:
-1. Select generator family by deterministic round-robin over cheap-tier list.
-2. Select judge family from a different family than the generator.
-3. Reject any example where `generator_model == judge_model` or same family.
+| Role | Model id(s) | API / configuration |
+|------|-------------|---------------------|
+| **Frontier seed author** (rare) | `anthropic/claude-sonnet-4.6` | OpenRouter or direct API; **not** invoked in deterministic v0.1 corpus build |
+| **Dev-tier bulk generator** | `qwen/qwen3-next-80b-a3b-instruct`, `deepseek/deepseek-chat` | OpenRouter `POST /api/v1/chat/completions` when extending synthesis beyond templates |
+| **Dev-tier judge** (bulk filter) | Paired automatically: **never the same id** as the task’s bulk generator | Deterministic mechanical judge in `generation/pointwise_judge.py` by default; optional `generation/openrouter_judge.py` when `OPENROUTER_API_KEY` is set |
+| **Eval-tier judge** (calibration only) | `openai/gpt-5` | Reserved for **≤50** dev+heldout spot-checks per `scripts/run_judge_filter_pipeline.py`; bulk rows must not use this id |
 
-## Judge Filter Dimensions
-Pointwise judge scoring (1-5) on:
-- input coherence
-- ground-truth verifiability
-- rubric-application clarity
+**Catalog-authored tasks** (trace/programmatic/hand modes): author stub is `deterministic/v0.1-scenario-catalog`; dev-tier judge is the first cheap-tier id in `model_routing.py` (distinct string from the stub).
 
-Inclusion thresholds (interim):
-- coherence >= 4
-- verifiability >= 4
-- rubric clarity >= 4
+## Rotation rule
+For each **multi-LLM synthesis** task:
+1. Pick bulk generator by deterministic round-robin (`pick_bulk_generator(seq)` in `scripts/build_corpus.py`).
+2. Pick dev-tier judge with `dev_judge_for_bulk_generator(generator)` — **must differ** from the generator model id.
+3. Reject any pipeline configuration where `generator_model == judge_model`.
 
-## Pairwise Dedup Selection
-When near-duplicate candidates are detected, keep the candidate with:
-1. higher rubric-clarity score
-2. then higher verifiability
-3. then longer rationale coverage
+## Family separation
+Judge filter models must **not** reuse the same OpenRouter model id as the bulk generator for that task. Eval-tier calibration uses a **third** id (`openai/gpt-5`) on the fixed calibration subset only.
 
-## Eval-Tier Budget Guard
-Eval-tier calls are limited to calibration sample only (target <= 50 tasks). Bulk generation/filtering is cheap-tier only.
+## Judge filter dimensions
+Pointwise scoring (1–5), prompt: `prompts/judge_pointwise.md`. Dimensions:
+- `input_coherence`
+- `ground_truth_verifiability`
+- `rubric_application_clarity`
+
+**Inclusion thresholds** (see `generation/judge_filter.py`): each dimension **≥ 4**.
+
+## Pairwise dedup
+Near-duplicates: `generation/dedup_pairwise.py`. Keep the candidate with higher:
+1. `rubric_application_clarity`
+2. `ground_truth_verifiability`
+3. length of `candidate_output`
+
+## Eval-tier budget guard
+Eval-tier judge id applies to **at most 50** tasks (dev+heldout sample). All other rows use dev-tier judge pairing.
 
 ## Reproducibility
-All scripts accept and persist a reproducibility seed (`--seed`, default `11711`).
+Corpus slotting seed defaults to `11711` (documented in package `seed_counts.json`). Judge audit log: `python scripts/run_judge_filter_pipeline.py` → `data/judge_filter_log.jsonl`.

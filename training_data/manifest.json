@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.1",
+  "generated_at_utc": "2026-05-01T17:48:12Z",
+  "git_head": "823abc5add2f2e707a55c30803882bbd6e2f17b2",
+  "scoring_evaluator_sha256": "246b65e60710c0388d04e2b9eb2b0f3206085d8628f5da83a20e90273bc782fd",
+  "train_jsonl": "data/tasks_train.jsonl",
+  "builder_cli": {
+    "min_pairs_per_dimension": 1,
+    "max_pairs_per_task": null,
+    "mutators": "all"
+  },
+  "n_rows_in_train_jsonl": 120,
+  "n_tasks_partition_train": 120,
+  "n_skipped_chosen_not_pass": 0,
+  "n_skipped_chosen_score_error": 0,
+  "n_skipped_finalize_or_still_pass": 126,
+  "n_mutator_failures_by_dimension": {
+    "bench_commitment_safety": 20,
+    "tone_marker_safety": 24,
+    "multi_system_coordination": 18,
+    "non_condescending_gap_framing": 30
+  },
+  "n_pairs": 142,
+  "pairs_by_failure_dimension": {
+    "weak_signal_calibration": 78,
+    "bench_commitment_safety": 46,
+    "tone_marker_safety": 12,
+    "multi_system_coordination": 4,
+    "non_condescending_gap_framing": 2
+  },
+  "pairs_by_source_mode": {
+    "trace_derived": 42,
+    "programmatic": 43,
+    "multi_llm_synthesis": 35,
+    "hand_authored_adversarial": 22
+  }
+}

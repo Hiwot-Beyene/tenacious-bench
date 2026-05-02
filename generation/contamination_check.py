@@ -8,10 +8,15 @@ input always collide. We therefore:
 2) **High-entropy 8-grams**: 8-grams on the slice that varies per task (firmographics +
    public teaser) must not overlap train→held-out union (prevents near-identical
    prospect stories leaking).
-3) **Embedding proxy**: token-frequency cosine on that same slice; flag any held-out vs
-   train pair above ``--embedding-threshold`` (default 0.85).
-4) **Time-shift**: rows with a four-digit year in the brief/bench must carry
-   ``internal_capacity_snapshot.as_of``.
+3) **Embedding proxy (cheap, linear)**: **bag-of-word** frequency vectors on the same slice;
+   cosine similarity; flag held-out vs train **and** held-out vs dev pairs at or above
+   ``--embedding-threshold`` (default **0.85**). This is a deliberate stand-in for a small
+   sentence embedding model: it is deterministic, dependency-free, and correlates with
+   lexical overlap on the high-entropy slice (see ``thresholds.embedding_methodology`` in the report).
+4) **Time-shift / signal-window provenance**: rows with a **public four-digit year** in the
+   brief or bench (external signal dated to a calendar year) must carry
+   ``internal_capacity_snapshot.as_of`` so bench/capacity claims are anchored to a documented
+   snapshot window, not an implied “current” date.
 """
 from __future__ import annotations
 
@@ -110,23 +115,31 @@ def exact_duplicate_across(train_rows: List[Dict[str, Any]], other_rows: List[Di
     return hits
 
 
-def embedding_flags(
-    train_rows: List[Dict[str, Any]],
+def embedding_flags_against_ref(
+    ref_rows: List[Dict[str, Any]],
     held_rows: List[Dict[str, Any]],
     threshold: float,
+    *,
+    ref_partition_label: str,
 ) -> Tuple[List[Dict[str, Any]], float]:
-    train_bows = [(r["task_id"], bow_counts(high_entropy_slice(r))) for r in train_rows]
+    ref_bows = [(r["task_id"], bow_counts(high_entropy_slice(r))) for r in ref_rows]
     flagged: List[Dict[str, Any]] = []
     worst = 0.0
     for hr in held_rows:
         hb = bow_counts(high_entropy_slice(hr))
         hid = hr["task_id"]
-        for tid, tb in train_bows:
-            c = cosine_bow(hb, tb)
+        for rid, rb in ref_bows:
+            c = cosine_bow(hb, rb)
             if c > worst:
                 worst = c
             if c >= threshold:
-                flagged.append({"held_task_id": hid, "train_task_id": tid, "cosine": round(c, 6)})
+                flagged.append(
+                    {
+                        "held_task_id": hid,
+                        f"{ref_partition_label}_task_id": rid,
+                        "cosine": round(c, 6),
+                    }
+                )
     return flagged, worst
 
 
@@ -143,7 +156,8 @@ def run_report(
     dev_rows = list(iter_jsonl(dev_path)) if dev_path and dev_path.exists() else []
 
     dup_held = exact_duplicate_across(train_rows, held_rows)
-    dup_dev = exact_duplicate_across(train_rows, dev_rows) if dev_rows else []
+    dup_dev_train = exact_duplicate_across(train_rows, dev_rows) if dev_rows else []
+    dup_held_dev = exact_duplicate_across(dev_rows, held_rows) if dev_rows else []
 
     # n-gram check uses high-entropy slice (see module docstring).
     def slice_ngrams(text: str) -> Set[str]:
@@ -156,26 +170,45 @@ def run_report(
     train_union_he: Set[str] = set()
     for r in train_rows:
         train_union_he |= slice_ngrams(high_entropy_slice(r))
-    ngram_viol: List[str] = []
-    for r in held_rows:
-        if slice_ngrams(high_entropy_slice(r)) & train_union_he:
-            ngram_viol.append(str(r.get("task_id")))
+    dev_union_he: Set[str] = set()
+    for r in dev_rows:
+        dev_union_he |= slice_ngrams(high_entropy_slice(r))
 
-    embed_flags, max_cos = embedding_flags(train_rows, held_rows, embedding_threshold)
+    ngram_viol_train_held: List[str] = []
+    ngram_viol_dev_held: List[str] = []
+    for r in held_rows:
+        he_ng = slice_ngrams(high_entropy_slice(r))
+        if he_ng & train_union_he:
+            ngram_viol_train_held.append(str(r.get("task_id")))
+        if dev_rows and he_ng & dev_union_he:
+            ngram_viol_dev_held.append(str(r.get("task_id")))
+
+    embed_train, max_cos_train = embedding_flags_against_ref(
+        train_rows, held_rows, embedding_threshold, ref_partition_label="train"
+    )
+    embed_dev: List[Dict[str, Any]] = []
+    max_cos_dev = 0.0
+    if dev_rows:
+        embed_dev, max_cos_dev = embedding_flags_against_ref(
+            dev_rows, held_rows, embedding_threshold, ref_partition_label="dev"
+        )
     ts_held = time_shift_violations(held_rows)
     ts_dev = time_shift_violations(dev_rows) if dev_rows else []
 
     ok = (
         not dup_held
-        and not dup_dev
-        and not ngram_viol
-        and not embed_flags
+        and not dup_dev_train
+        and not dup_held_dev
+        and not ngram_viol_train_held
+        and not ngram_viol_dev_held
+        and not embed_train
+        and not embed_dev
         and not ts_held
         and not ts_dev
     )
 
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "status": "pass" if ok else "fail",
         "partition_paths": {
             "train": str(train_path),
@@ -185,25 +218,51 @@ def run_report(
         "thresholds": {
             "ngram_n": ngram_n,
             "ngram_field": "high_entropy_slice (company, domain, region, employees_bucket, public_context_teaser)",
+            "ngram_rationale": (
+                f"Strict {ngram_n}-grams on full anonymized input collide on shared templates; "
+                "the high-entropy slice isolates prospect-specific surface form (same slice philosophy "
+                "as scripts/verify_training_data_leakage.py)."
+            ),
             "embedding_cosine_max": embedding_threshold,
             "embedding_field": "high_entropy_slice",
+            "embedding_methodology": (
+                "Bag-of-word cosine (token counts) — cheap linear embedding proxy, no external model "
+                "weights; threshold 0.85 matches verify_training_data_leakage.py. "
+                "Swap for MiniLM-L6-v2 etc. only if you accept new dependencies and non-determinism."
+            ),
+            "time_shift_rule": (
+                "If hiring_signal_brief or bench_summary contains a 19xx/20xx year, "
+                "internal_capacity_snapshot.as_of must be non-empty (signal-window + bench coherence)."
+            ),
         },
         "checks": {
-            "exact_duplicate_train_held": {"violations": len(dup_held), "task_ids": dup_held},
-            "exact_duplicate_train_dev": {"violations": len(dup_dev), "task_ids": dup_dev},
-            "ngram_high_entropy_train_held": {"violations": len(ngram_viol), "task_ids": ngram_viol},
-            "embedding_cosine_train_held": {
-                "violations": len(embed_flags),
-                "max_cosine_observed": round(max_cos, 6),
-                "pairs": embed_flags[:50],
+            "exact_duplicate_train_heldout": {"violations": len(dup_held), "task_ids": dup_held},
+            "exact_duplicate_train_dev": {"violations": len(dup_dev_train), "task_ids": dup_dev_train},
+            "exact_duplicate_dev_heldout": {"violations": len(dup_held_dev), "task_ids": dup_held_dev},
+            "ngram_high_entropy_train_heldout": {
+                "violations": len(ngram_viol_train_held),
+                "task_ids": ngram_viol_train_held,
             },
-            "time_shift_held": {"flags": len(ts_held), "task_ids": ts_held},
+            "ngram_high_entropy_dev_heldout": {
+                "violations": len(ngram_viol_dev_held),
+                "task_ids": ngram_viol_dev_held,
+            },
+            "embedding_cosine_train_heldout": {
+                "violations": len(embed_train),
+                "max_cosine_observed": round(max_cos_train, 6),
+                "pairs": embed_train[:50],
+            },
+            "embedding_cosine_dev_heldout": {
+                "violations": len(embed_dev),
+                "max_cosine_observed": round(max_cos_dev, 6),
+                "pairs": embed_dev[:50],
+            },
+            "time_shift_heldout": {"flags": len(ts_held), "task_ids": ts_held},
             "time_shift_dev": {"flags": len(ts_dev), "task_ids": ts_dev},
         },
         "methodology_notes": (
-            "Full-input 8-grams are not used: scenario templates repeat across splits. "
-            "Leakage is checked via anonymized full-input equality, high-entropy n-grams, "
-            "and cosine on the high-entropy slice."
+            "Comparisons cover held-out vs training and held-out vs dev (exact, n-gram, embedding). "
+            "Full-input n-grams are not primary: scenario templates repeat across splits."
         ),
     }
 

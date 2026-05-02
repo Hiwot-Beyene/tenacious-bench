@@ -25,6 +25,7 @@ from bench_corpus.anchor_packs import load_bench_summary_json  # noqa: E402
 from bench_corpus.constants import CELL_COUNTS  # noqa: E402
 from bench_corpus.scenarios import build_task_payload  # noqa: E402
 from bench_corpus.seeds import ensure_company_seeds, load_trace_anchors, default_paths  # noqa: E402
+from generation.model_routing import pick_bulk_generator  # noqa: E402
 
 
 def materialize(
@@ -52,11 +53,7 @@ def materialize(
                         trace = traces[trace_i % len(traces)]
                         trace_i += 1
 
-                    route = (
-                        "qwen/qwen3-next-80b-a3b-instruct"
-                        if seq % 2 == 0
-                        else "deepseek/deepseek-chat"
-                    )
+                    route = pick_bulk_generator(seq)
                     row = build_task_payload(
                         seq=seq,
                         failure_dimension=failure_dimension,

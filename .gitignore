@@ -3,6 +3,7 @@
 Tenacious Style Guide and 12 Good-Bad Examples v2.md
 TRP1 Challenge Week 11_ Sales Agent Evaluation Bench.md
 *__pycache__*
+**/hf_hub_cache/
 
 # Act II package output (single source: data/ + docs/ + reports/)
 tenacious_bench_v0.1/train/

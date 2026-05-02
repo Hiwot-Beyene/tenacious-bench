@@ -5,6 +5,10 @@ Expanded Tenacious-Bench v0.1 scenarios aligned to:
 - Conversion_Engine_and_Tenacious_Bench_Explained.md edge cases
 
 `tenacious_sales_data/` is gitignored in many clones; scenarios still encode its *rules* (ICP, bench, tone).
+
+Programmatic expansion is **combinatorial**: each catalog row is instantiated with real company seeds
+(size/segment/region/domain/teaser) and rotated anchor lines + bench stack counts from
+`bench_corpus.anchor_packs` at `scenarios.build_task_payload` time (see `scripts/build_corpus.py`).
 """
 from __future__ import annotations
 

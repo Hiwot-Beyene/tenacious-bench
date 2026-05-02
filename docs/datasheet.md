@@ -4,6 +4,8 @@
 
 Tenacious-Bench is a sales-agent evaluation dataset for **workflow-level B2B outreach reliability** in the Tenacious domain. It targets failure modes not well covered by public benches: weak-signal over-assertion, bench over-commitment, tone-marker violations, override/coordination failures, and condescending gap framing. The dataset is intended for evaluator development and critic/judge training (Path B), not direct prospect automation.
 
+*Document length:* ~1.1k words (~4 printed pages at 250–300 words/page), within the **3–5 page** datasheet guideline.
+
 ## 1) Motivation (Gebru)
 
 Week 10 showed that fluent outputs can still violate high-cost business constraints (brand safety, capacity honesty, confidence calibration). Existing public benchmarks under-grade these Tenacious-specific behaviors. This dataset exists to make those failures machine-gradable and reproducible.
@@ -39,6 +41,14 @@ Primary users:
 | Non-condescending gap framing | 56 |
 | **Total** | **240** |
 
+### Limitations and known biases (composition-level)
+
+- **English-centric, B2B-tech framing:** Tasks assume outbound email in enterprise sales idiom; other locales, languages, or regulated vertical copy are **not** validated here.
+- **Template coupling:** Programmatic rows share scenario scaffolding; **split leakage** is mitigated via high-entropy n-gram / cosine checks and exact-input dedup (`generation/contamination_check.py`), but models may still exploit **shared template regularities**.
+- **Mechanical scorer ceiling (Tenacious-Bench rubric):** `scoring_evaluator.py` does not encode all stakeholder nuance; inter-rater protocol and `docs/rubric_revision_log.md` govern calibration.
+- **Seed / sector skew:** Company seeds reflect the Conversion Engine / ODM pipeline, not a uniform global firm sample.
+- **Single-turn emphasis:** One email per task; CRM trajectories are only partially represented in text.
+
 ### Per-mode examples (what a typical task looks like)
 - **Trace-derived:** a real Week 10 enrich/compose output transformed into `task + candidate_output + rubric` with trace ID provenance.
 - **Programmatic:** templated cold-email tasks varying role-count confidence, sector, and capacity constraints.
@@ -67,17 +77,17 @@ Human roles:
 - Normalize text fields to ASCII-safe JSON
 - Remove direct private identifiers; keep domain as "Tenacious workflow" only
 - Add structured metadata: source mode, failure dimension, difficulty, partition
-- Label rubric dimensions with bounded 1–5 scales and machine-checkable constraints
+- Label Tenacious-Bench rubric dimensions with bounded 1–5 scales and machine-checkable constraints
 
 Inter-rater protocol:
 - 30-task stratified subset; mechanical replay yields 100% agreement at a fixed commit
 - Optional human Pass2 for blind relabel; target ≥80% agreement per dimension
 - If under threshold, revise rubric definitions and relabel
 
-### Contamination report (v1.1 schema)
+### Contamination report (v1.2 schema)
 
 - **Canonical path:** `reports/contamination_check.json` (also copied into the Act II package folder by `scripts/build_tenacious_bench_v01_package.py`).
-- **Status:** `pass` when there are no exact anonymized-input collisions (train vs held-out / train vs dev), no high-entropy 8-gram overlaps, no embedding pairs above the cosine threshold, and no time-shift flags.
+- **Status:** `pass` when there are no exact anonymized-input collisions (**train↔held-out**, **train↔dev**, **dev↔held-out**), no **high-entropy 8-gram** overlap of held-out against the **train** or **dev** union, no **bag-of-word cosine** pairs (held-out vs train or vs dev) at or above **0.85** on that slice, and no **time-shift** flags (year in brief/bench ⇒ `internal_capacity_snapshot.as_of` present).
 
 ## 5) Uses (Gebru)
 
@@ -95,8 +105,8 @@ Inter-rater protocol:
 
 - Planned host: HuggingFace dataset repo (`tenacious-bench-v0.1`)
 - Format: JSONL per partition + schema + evaluator scripts
-- License target: **CC-BY-4.0**
-- Rationale: enables open evaluation reuse while preserving attribution
+- **License:** **CC-BY-4.0**
+- **Rationale:** Allows academic and industry **benchmark reuse**, redistribution of derived evaluators and papers, and **attribution** to the Tenacious-Bench authors and upstream probe/taxonomy sources. **Not** CC0: we want citation and provenance preserved when the dataset is cited in model cards or leaderboards.
 
 ## 7) Maintenance (Gebru)
 
@@ -109,7 +119,7 @@ Update cadence:
 
 Governance checks per release:
 - contamination report refresh
-- rubric drift review
+- Tenacious-Bench rubric / scorer drift review
 - inter-rater agreement refresh on a sampled subset
 - `verify_audit_probe_coverage.py`, `verify_scenario_catalog_integrity.py`, `verify_materialized_task_coverage.py` (probe registry ↔ catalog ↔ built JSONL)
 

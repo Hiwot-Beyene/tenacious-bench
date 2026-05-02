@@ -1,0 +1,33 @@
+[project]
+name = "tenacious-bench"
+version = "0.1.0"
+description = "Tenacious-Bench corpus, evaluator, and Path B training utilities"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+# Core repo scripts (contamination, corpus build, preference export) use stdlib only.
+eval = []
+# Act IV: local LoRA preference training + sealed ablation (HF TRL stack).
+# Install with: uv sync --extra train   OR   uv pip install -e ".[train]"
+train = [
+  "torch>=2.1.0",
+  "transformers>=4.44.0",
+  "datasets>=2.20.0",
+  "accelerate>=0.33.0",
+  "peft>=0.12.0",
+  # TRL 1.x pulls optional judge helpers; llm-blender satisfies the import chain.
+  "trl>=1.3.0,<2",
+  "llm-blender>=0.0.2",
+  "sentencepiece>=0.2.0",
+  "protobuf>=4.25.0",
+  "numpy>=1.26.0",
+  "python-dotenv>=1.0.0",
+]
+# Optional: Unsloth (GPU, CUDA). Often installed per their docs instead of PyPI pin:
+#   uv pip install unsloth
+unsloth = ["unsloth"]
+
+[dependency-groups]
+dev = []

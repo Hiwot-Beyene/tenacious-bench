@@ -1,4 +1,17 @@
-"""Assemble task dicts from company rows + scenario catalog (see scenario_catalog.py)."""
+"""Assemble task dicts from company rows + scenario catalog (see scenario_catalog.py).
+
+**Four authoring modes** (`source_mode` on each task):
+- `trace_derived` — Week 10 trace id + lead id bound into provenance.
+- `programmatic` — scenario template × **combinatorial slots**: company seed fields (segment,
+  region, `employees_bucket`, domain, teaser) × `anchor_packs.build_anchor_ctx` (funding line,
+  velocity line, layoff line, leadership line, per-stack bench counts from `internal_capacity_snapshot`).
+- `multi_llm_synthesis` — same structured payload; `synthesis_route` records dev-tier bulk model id
+  for anti-leakage logs (`generation/model_routing.py`).
+- `hand_authored_adversarial` — adversarial rows from the same scenario library with explicit
+  provenance.
+
+Train split source-mode marginals target **~30 / 30 / 25 / 15** (`bench_corpus.constants.SOURCE_MODE_TRAIN_SHARE_TARGETS`).
+"""
 from __future__ import annotations
 
 import json
@@ -131,7 +144,7 @@ def build_task_payload(
     if capacity_snapshot:
         input_ctx["internal_capacity_snapshot"] = slim_capacity_snapshot(capacity_snapshot)
 
-    return {
+    out: Dict[str, Any] = {
         "task_id": f"tb_v01_{seq:06d}",
         "source_mode": source_mode,
         "failure_dimension": failure_dimension,
@@ -144,3 +157,6 @@ def build_task_payload(
         "pass_threshold": 75,
         "coverage": coverage,
     }
+    # Dev-tier bulk synthesis route (multi-LLM slots only); judge logs use `generation/model_routing.py`.
+    out["synthesis_route"] = synthesis_route if source_mode == "multi_llm_synthesis" else None
+    return out

@@ -1,0 +1,9 @@
+{
+  "generated_at_utc": "2026-05-02T10:08:35Z",
+  "source_preferences": "training_data/preferences.jsonl",
+  "n_total": 142,
+  "n_train": 128,
+  "n_valid": 14,
+  "valid_fraction": 0.1,
+  "seed": 11711
+}

@@ -17,14 +17,11 @@ import random
 from pathlib import Path
 from typing import Dict, List
 
-CHEAP_MODELS = [
-    "qwen/qwen3-next-80b-a3b-instruct",
-    "deepseek/deepseek-chat",
-]
+from generation.model_routing import pick_bulk_generator
 
 
 def pick_generator(i: int) -> str:
-    return CHEAP_MODELS[i % len(CHEAP_MODELS)]
+    return pick_bulk_generator(i)
 
 
 def synthesize_placeholder(seed: int, count: int) -> List[Dict]:

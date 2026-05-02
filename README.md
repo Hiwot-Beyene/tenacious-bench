@@ -2,7 +2,7 @@
 
 Tenacious-Bench is a sales-agent evaluation bench for the Tenacious workflow domain. It targets behaviors that public benchmarks under-grade in B2B outreach: confidence calibration under weak signals, bench commitment safety, tone-marker compliance, coordination with CRM overrides, and non-condescending gap framing.
 
-## Current Status (Week 11 — Act II pipeline)
+## Current Status (Week 11 — Act II + Act III data)
 
 ### Completed (robust core)
 - Audit memo with Week 10 evidence links: [`docs/audit_memo.md`](docs/audit_memo.md)
@@ -22,10 +22,24 @@ Tenacious-Bench is a sales-agent evaluation bench for the Tenacious workflow dom
   - [`synthesis_memos/memo_gebru_pushkarna_documentation.md`](synthesis_memos/memo_gebru_pushkarna_documentation.md)
   - [`synthesis_memos/memo_chen_emnlp2025_contamination.md`](synthesis_memos/memo_chen_emnlp2025_contamination.md)
 - **Contamination pipeline:** [`generation/contamination_check.py`](generation/contamination_check.py) — run [`scripts/run_contamination_check.py`](scripts/run_contamination_check.py) → [`reports/contamination_check.json`](reports/contamination_check.json)
-- **Inter-rater:** [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py); optional human Pass2 — [`docs/inter_rater_human_protocol.md`](docs/inter_rater_human_protocol.md)
+- **Inter-rater:** [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py); optional human Pass2 — [`docs/inter_rater_human_protocol.md`](docs/inter_rater_human_protocol.md); **Tenacious-Bench scorer** revision log — [`docs/rubric_revision_log.md`](docs/rubric_revision_log.md)
 
-### In progress (Acts III–V)
-- Path B training run + HuggingFace dataset/model cards
+### Act III — Path B training data (Day 4 deliverables)
+- **Rationale (one page):** [`docs/methodology_rationale.md`](docs/methodology_rationale.md) — Path B, SimPO primary, DPO/ORPO fallbacks, Li + Gu controls, ≥3 Week 10 trace IDs.
+- **Critic prompt + mutators:** [`bench_corpus/critic_prompt.py`](bench_corpus/critic_prompt.py), [`bench_corpus/preference_mutators.py`](bench_corpus/preference_mutators.py).
+- **Artifacts:** [`training_data/preferences.jsonl`](training_data/preferences.jsonl), [`training_data/manifest.json`](training_data/manifest.json), schema notes in [`training_data/README.md`](training_data/README.md).
+- **Builder + leakage QA:** [`scripts/build_path_b_preferences.py`](scripts/build_path_b_preferences.py), [`scripts/verify_training_data_leakage.py`](scripts/verify_training_data_leakage.py).
+- **Path-specific synthesis memos:** [`synthesis_memos/memo_rafailov_dpo_path_b.md`](synthesis_memos/memo_rafailov_dpo_path_b.md), [`synthesis_memos/memo_meng_simpo_path_b.md`](synthesis_memos/memo_meng_simpo_path_b.md), [`synthesis_memos/memo_hong_orpo_path_b.md`](synthesis_memos/memo_hong_orpo_path_b.md), [`synthesis_memos/memo_li_preference_leakage_path_b.md`](synthesis_memos/memo_li_preference_leakage_path_b.md), [`synthesis_memos/memo_kim_prometheus2_path_b.md`](synthesis_memos/memo_kim_prometheus2_path_b.md).
+
+```bash
+python scripts/build_path_b_preferences.py
+python scripts/verify_training_data_leakage.py
+```
+
+Act III does **not** run GPU training; Act IV uses Unsloth + Qwen 3.5 per the challenge Production Stack.
+
+### In progress (Acts IV–V)
+- Path B **training run** + HuggingFace dataset/model cards
 - Public blog + community engagement artifact
 
 ## Challenge Requirement Mapping (Reviewer Fast Path)
@@ -45,6 +59,7 @@ This section maps each Week 11 interim requirement directly to committed artifac
 | `tenacious_bench_v0.1/` (partitions + datasheet + contamination + inter-rater + generation_scripts) | [`tenacious_bench_v0.1/`](tenacious_bench_v0.1/), [`scripts/build_tenacious_bench_v01_package.py`](scripts/build_tenacious_bench_v01_package.py) |
 | Materialized dataset + scripts | [`data/tasks_all.jsonl`](data/tasks_all.jsonl), [`data/company_seeds.json`](data/company_seeds.json), [`scripts/build_corpus.py`](scripts/build_corpus.py), [`scripts/verify_composition.py`](scripts/verify_composition.py), [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py) |
 | Audit probe + catalog + materialized QA | [`bench_corpus/audit_probe_registry.py`](bench_corpus/audit_probe_registry.py), [`scripts/verify_audit_probe_coverage.py`](scripts/verify_audit_probe_coverage.py), [`scripts/verify_scenario_catalog_integrity.py`](scripts/verify_scenario_catalog_integrity.py), [`scripts/verify_materialized_task_coverage.py`](scripts/verify_materialized_task_coverage.py) |
+| Act III Path B (`training_data/`, rationale, path memos) | [`docs/methodology_rationale.md`](docs/methodology_rationale.md), [`training_data/`](training_data/), [`scripts/build_path_b_preferences.py`](scripts/build_path_b_preferences.py), [`scripts/verify_training_data_leakage.py`](scripts/verify_training_data_leakage.py), path memos under [`synthesis_memos/`](synthesis_memos/) (`memo_*_path_b.md`) |
 
 Suggested review order (10-minute pass):
 1. `README.md` (this file)
@@ -58,6 +73,7 @@ Suggested review order (10-minute pass):
 
 ```bash
 python scripts/build_corpus.py              # optional: --refresh-seeds to rebuild company_seeds.json
+python scripts/run_judge_filter_pipeline.py # pointwise judge log → data/judge_filter_log.jsonl (package copies this)
 python scripts/run_contamination_check.py
 python scripts/verify_composition.py
 python scripts/verify_audit_probe_coverage.py
@@ -97,10 +113,11 @@ python evaluation/scoring_evaluator.py evaluation/tasks_examples/*.json
 
 ## Repository Structure
 
-- `docs/` - audit memo, methodology, datasheet
+- `docs/` - audit memo, methodology, methodology_rationale (Act III), datasheet
+- `training_data/` - Path B `preferences.jsonl` + `manifest.json` (Act III)
 - `tenacious_bench_v0.1/` - **generated** Act II layout (see `tenacious_bench_v0.1/README.md`; tracked outputs gitignored)
 - `data/` - `company_seeds.json`, materialized task JSONL (train/dev/heldout/all)
-- `bench_corpus/` - seed loader, scenario library, rubric constants (single source for task text)
+- `bench_corpus/` - seed loader, scenario library, `COMMON_RUBRIC` / task rubric constants (single source for task text)
 - `scripts/` - corpus build, contamination CLI, composition verification, inter-rater tooling, Act II package assembler
 - `evaluation/` - scoring evaluator and example tasks
 - `schema.json` - canonical task object contract for examples and generated tasks
@@ -122,7 +139,7 @@ python evaluation/scoring_evaluator.py evaluation/tasks_examples/*.json
 - Interim contamination report: [`reports/contamination_check.json`](reports/contamination_check.json)
 - Cost log: [`reports/cost_log.md`](reports/cost_log.md)
 
-## What Is Next (Acts III–V)
+## What Is Next (Acts IV–V)
 
-1. Train and calibrate Path B critic/judge using preference pairs derived from the corpus + evaluator.
+1. **Act IV:** Train Path B critic with **Unsloth + Qwen 3.5** (0.8B / 2B / 4B) + LoRA on `training_data/preferences.jsonl` (SimPO primary per `docs/methodology_rationale.md`); log loss; run held-out ablations.
 2. Publish HuggingFace dataset + model cards (pinned versions), blog post, and community engagement artifact.

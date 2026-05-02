@@ -1,6 +1,8 @@
 # Audit Memo: What Public Benches Miss for Tenacious
 
-Public benchmarks (including retail-style dialog benchmarks) under-grade Tenacious-critical behavior because they reward task completion, not policy-safe sales reasoning in low-confidence B2B contexts. Week 10 evidence shows five distinct gaps.
+Public benchmarks under-grade Tenacious-critical behavior because they reward generic task success, not policy-safe sales reasoning in low-confidence B2B contexts. Week 10 evidence shows five distinct gaps.
+
+**Contrast with τ²-Bench (retail):** τ²-Bench optimizes tool-use trajectories in retail-style customer-service dialogs—whether the agent invoked the right tool and resolved the user turn. Tenacious requires grading **B2B outbound policy** on dimensions public benches omit: hiring-signal **confidence calibration**, **bench/capacity** honesty, enterprise **tone-marker** compliance, CRM/human **override obedience**, and **non-condescending** competitor-gap framing. A strong τ² trajectory does not imply a safe Tenacious email; our rubric targets **decision quality under uncertain evidence**, not retail dialog completion.
 
 ## Gap 1: Confidence calibration under weak hiring signal (non-obvious)
 

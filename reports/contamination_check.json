@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "status": "pass",
   "partition_paths": {
     "train": "/home/hiwot/tenacious-b2b-salesperson/tenacious-bench/data/tasks_train.jsonl",
@@ -9,11 +9,14 @@
   "thresholds": {
     "ngram_n": 8,
     "ngram_field": "high_entropy_slice (company, domain, region, employees_bucket, public_context_teaser)",
+    "ngram_rationale": "Strict 8-grams on full anonymized input collide on shared templates; the high-entropy slice isolates prospect-specific surface form (same slice philosophy as scripts/verify_training_data_leakage.py).",
     "embedding_cosine_max": 0.85,
-    "embedding_field": "high_entropy_slice"
+    "embedding_field": "high_entropy_slice",
+    "embedding_methodology": "Bag-of-word cosine (token counts) \u2014 cheap linear embedding proxy, no external model weights; threshold 0.85 matches verify_training_data_leakage.py. Swap for MiniLM-L6-v2 etc. only if you accept new dependencies and non-determinism.",
+    "time_shift_rule": "If hiring_signal_brief or bench_summary contains a 19xx/20xx year, internal_capacity_snapshot.as_of must be non-empty (signal-window + bench coherence)."
   },
   "checks": {
-    "exact_duplicate_train_held": {
+    "exact_duplicate_train_heldout": {
       "violations": 0,
       "task_ids": []
     },
@@ -21,16 +24,29 @@
       "violations": 0,
       "task_ids": []
     },
-    "ngram_high_entropy_train_held": {
+    "exact_duplicate_dev_heldout": {
       "violations": 0,
       "task_ids": []
     },
-    "embedding_cosine_train_held": {
+    "ngram_high_entropy_train_heldout": {
+      "violations": 0,
+      "task_ids": []
+    },
+    "ngram_high_entropy_dev_heldout": {
+      "violations": 0,
+      "task_ids": []
+    },
+    "embedding_cosine_train_heldout": {
       "violations": 0,
       "max_cosine_observed": 0.542228,
       "pairs": []
     },
-    "time_shift_held": {
+    "embedding_cosine_dev_heldout": {
+      "violations": 0,
+      "max_cosine_observed": 0.425922,
+      "pairs": []
+    },
+    "time_shift_heldout": {
       "flags": 0,
       "task_ids": []
     },
@@ -39,5 +55,5 @@
       "task_ids": []
     }
   },
-  "methodology_notes": "Full-input 8-grams are not used: scenario templates repeat across splits. Leakage is checked via anonymized full-input equality, high-entropy n-grams, and cosine on the high-entropy slice."
+  "methodology_notes": "Comparisons cover held-out vs training and held-out vs dev (exact, n-gram, embedding). Full-input n-grams are not primary: scenario templates repeat across splits."
 }
