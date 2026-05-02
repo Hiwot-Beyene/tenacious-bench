@@ -1,0 +1,29 @@
+{
+  "started_at_utc": "2026-05-02T12:29:08Z",
+  "hub_prefetch_wall_s": 4.193,
+  "hf_home": "/content/tenacious-bench/outputs/preference_lora_day5/hf_hub_cache",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "train_jsonl": "/content/tenacious-bench/training_data/for_unsloth/train.jsonl",
+  "valid_jsonl": null,
+  "skip_eval": true,
+  "dpo_beta": 0.1,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "target_modules": [
+    "v_proj",
+    "q_proj",
+    "k_proj",
+    "up_proj",
+    "o_proj",
+    "gate_proj",
+    "down_proj"
+  ],
+  "num_train_epochs": 1.0,
+  "max_steps": 0,
+  "per_device_train_batch_size": 1,
+  "gradient_accumulation_steps": 8,
+  "learning_rate": 5e-06,
+  "logging_steps": 5,
+  "eval_steps": null
+}

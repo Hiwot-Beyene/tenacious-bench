@@ -1,0 +1,447 @@
+2026-05-01 23:34:47,923 INFO device=cpu model_id=Qwen/Qwen2.5-0.5B-Instruct
+2026-05-01 23:34:47,923 WARNING CUDA is not available; training will use CPU (slow). For Day-5 runs use a GPU machine or Colab.
+2026-05-01 23:34:47,924 INFO HF_HOME was unset; using an isolated Hub cache at /home/hiwot/tenacious-b2b-salesperson/tenacious-bench/outputs/preference_lora_smoke/hf_hub_cache so this run does not wait on locks from other projects using ~/.cache/huggingface. To share one cache for all runs, set HF_HOME in .env.
+2026-05-01 23:34:53,712 INFO Loading base weights `Qwen/Qwen2.5-0.5B-Instruct` (tokenizer done).
+2026-05-01 23:35:38,713 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 45 s). First download can take several minutes.
+2026-05-01 23:36:23,714 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 90 s). First download can take several minutes.
+2026-05-01 23:37:08,714 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 135 s). First download can take several minutes.
+2026-05-01 23:37:53,714 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 180 s). First download can take several minutes.
+2026-05-01 23:38:38,715 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 225 s). First download can take several minutes.
+2026-05-01 23:39:23,715 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 270 s). First download can take several minutes.
+2026-05-01 23:40:08,716 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 315 s). First download can take several minutes.
+2026-05-01 23:40:53,716 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 360 s). First download can take several minutes.
+2026-05-01 23:41:38,717 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 405 s). First download can take several minutes.
+2026-05-01 23:42:23,717 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 450 s). First download can take several minutes.
+2026-05-01 23:43:08,718 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 495 s). First download can take several minutes.
+2026-05-01 23:43:53,719 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 540 s). First download can take several minutes.
+2026-05-01 23:44:38,719 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 585 s). First download can take several minutes.
+2026-05-01 23:45:23,720 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 630 s). First download can take several minutes.
+2026-05-01 23:46:08,720 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 675 s). First download can take several minutes.
+2026-05-01 23:46:53,721 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 720 s). First download can take several minutes.
+2026-05-01 23:47:38,722 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 765 s). First download can take several minutes.
+2026-05-01 23:48:23,722 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 810 s). First download can take several minutes.
+2026-05-01 23:49:08,723 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 855 s). First download can take several minutes.
+2026-05-01 23:49:53,723 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 900 s). First download can take several minutes.
+2026-05-01 23:50:38,723 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 945 s). First download can take several minutes.
+2026-05-01 23:51:23,724 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 990 s). First download can take several minutes.
+2026-05-01 23:52:08,725 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1035 s). First download can take several minutes.
+2026-05-01 23:52:53,725 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1080 s). First download can take several minutes.
+2026-05-01 23:53:38,726 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1125 s). First download can take several minutes.
+2026-05-01 23:54:23,726 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1170 s). First download can take several minutes.
+2026-05-01 23:55:08,727 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1215 s). First download can take several minutes.
+2026-05-01 23:55:53,727 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1260 s). First download can take several minutes.
+2026-05-01 23:56:38,727 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1305 s). First download can take several minutes.
+2026-05-01 23:57:23,728 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1350 s). First download can take several minutes.
+2026-05-01 23:58:08,728 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1395 s). First download can take several minutes.
+2026-05-01 23:58:53,729 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1440 s). First download can take several minutes.
+2026-05-01 23:59:38,729 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1485 s). First download can take several minutes.
+2026-05-02 00:00:23,730 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1530 s). First download can take several minutes.
+2026-05-02 00:01:08,730 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1575 s). First download can take several minutes.
+2026-05-02 00:01:53,731 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1620 s). First download can take several minutes.
+2026-05-02 00:02:38,731 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1665 s). First download can take several minutes.
+2026-05-02 00:03:23,732 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1710 s). First download can take several minutes.
+2026-05-02 00:04:08,733 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1755 s). First download can take several minutes.
+2026-05-02 00:04:53,733 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1800 s). First download can take several minutes.
+2026-05-02 00:05:38,734 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1845 s). First download can take several minutes.
+2026-05-02 00:06:23,734 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1890 s). First download can take several minutes.
+2026-05-02 00:07:08,735 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1935 s). First download can take several minutes.
+2026-05-02 00:07:53,735 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1980 s). First download can take several minutes.
+2026-05-02 00:08:38,735 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2025 s). First download can take several minutes.
+2026-05-02 00:09:23,736 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2070 s). First download can take several minutes.
+2026-05-02 00:10:08,736 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2115 s). First download can take several minutes.
+2026-05-02 00:10:53,737 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2160 s). First download can take several minutes.
+2026-05-02 00:11:38,737 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2205 s). First download can take several minutes.
+2026-05-02 00:12:23,738 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2250 s). First download can take several minutes.
+2026-05-02 00:13:08,738 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2295 s). First download can take several minutes.
+2026-05-02 00:13:53,739 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2340 s). First download can take several minutes.
+2026-05-02 00:14:38,739 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2385 s). First download can take several minutes.
+2026-05-02 00:15:23,740 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2430 s). First download can take several minutes.
+2026-05-02 00:16:08,740 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2475 s). First download can take several minutes.
+2026-05-02 00:16:53,741 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2520 s). First download can take several minutes.
+2026-05-02 00:17:38,742 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2565 s). First download can take several minutes.
+2026-05-02 00:18:23,743 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2610 s). First download can take several minutes.
+2026-05-02 00:19:08,743 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2655 s). First download can take several minutes.
+2026-05-02 00:19:53,743 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2700 s). First download can take several minutes.
+2026-05-02 00:20:38,744 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2745 s). First download can take several minutes.
+2026-05-02 00:21:23,744 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2790 s). First download can take several minutes.
+2026-05-02 00:22:08,745 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2835 s). First download can take several minutes.
+2026-05-02 00:22:53,745 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2880 s). First download can take several minutes.
+2026-05-02 00:23:38,746 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2925 s). First download can take several minutes.
+2026-05-02 00:24:23,746 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2970 s). First download can take several minutes.
+2026-05-02 00:25:08,747 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3015 s). First download can take several minutes.
+2026-05-02 00:25:53,748 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3060 s). First download can take several minutes.
+2026-05-02 00:26:38,749 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3105 s). First download can take several minutes.
+2026-05-02 00:27:23,750 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3150 s). First download can take several minutes.
+2026-05-02 00:28:08,750 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3195 s). First download can take several minutes.
+2026-05-02 00:28:53,751 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3240 s). First download can take several minutes.
+2026-05-02 00:29:38,752 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3285 s). First download can take several minutes.
+2026-05-02 00:30:23,752 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3330 s). First download can take several minutes.
+2026-05-02 00:31:08,753 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3375 s). First download can take several minutes.
+2026-05-02 00:31:53,753 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3420 s). First download can take several minutes.
+2026-05-02 00:32:38,754 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3465 s). First download can take several minutes.
+2026-05-02 00:33:23,754 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3510 s). First download can take several minutes.
+2026-05-02 00:34:08,755 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3555 s). First download can take several minutes.
+2026-05-02 00:34:53,755 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3600 s). First download can take several minutes.
+2026-05-02 00:35:38,755 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3645 s). First download can take several minutes.
+2026-05-02 00:36:23,756 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3690 s). First download can take several minutes.
+2026-05-02 00:37:08,756 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3735 s). First download can take several minutes.
+2026-05-02 00:37:53,757 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3780 s). First download can take several minutes.
+2026-05-02 00:38:38,757 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3825 s). First download can take several minutes.
+2026-05-02 00:39:23,758 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3870 s). First download can take several minutes.
+2026-05-02 00:40:08,758 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3915 s). First download can take several minutes.
+2026-05-02 00:40:53,759 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 3960 s). First download can take several minutes.
+2026-05-02 00:41:38,759 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4005 s). First download can take several minutes.
+2026-05-02 00:42:23,760 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4050 s). First download can take several minutes.
+2026-05-02 00:43:08,760 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4095 s). First download can take several minutes.
+2026-05-02 00:43:53,761 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4140 s). First download can take several minutes.
+2026-05-02 00:44:38,761 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4185 s). First download can take several minutes.
+2026-05-02 00:45:23,762 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4230 s). First download can take several minutes.
+2026-05-02 00:46:08,762 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4275 s). First download can take several minutes.
+2026-05-02 00:46:53,763 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4320 s). First download can take several minutes.
+2026-05-02 00:47:38,763 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4365 s). First download can take several minutes.
+2026-05-02 00:48:23,763 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4410 s). First download can take several minutes.
+2026-05-02 00:49:08,764 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4455 s). First download can take several minutes.
+2026-05-02 00:49:53,765 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4500 s). First download can take several minutes.
+2026-05-02 00:50:38,765 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4545 s). First download can take several minutes.
+2026-05-02 00:51:23,766 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4590 s). First download can take several minutes.
+2026-05-02 00:52:08,766 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4635 s). First download can take several minutes.
+2026-05-02 00:52:53,767 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4680 s). First download can take several minutes.
+2026-05-02 00:53:38,767 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4725 s). First download can take several minutes.
+2026-05-02 00:54:23,767 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4770 s). First download can take several minutes.
+2026-05-02 00:55:08,768 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4815 s). First download can take several minutes.
+2026-05-02 00:55:53,769 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4860 s). First download can take several minutes.
+2026-05-02 00:56:38,769 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4905 s). First download can take several minutes.
+2026-05-02 00:57:23,770 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4950 s). First download can take several minutes.
+2026-05-02 00:58:08,770 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 4995 s). First download can take several minutes.
+2026-05-02 00:58:53,771 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5040 s). First download can take several minutes.
+2026-05-02 00:59:38,771 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5085 s). First download can take several minutes.
+2026-05-02 01:00:23,771 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5130 s). First download can take several minutes.
+2026-05-02 01:01:08,772 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5175 s). First download can take several minutes.
+2026-05-02 01:01:53,772 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5220 s). First download can take several minutes.
+2026-05-02 01:02:38,773 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5265 s). First download can take several minutes.
+2026-05-02 01:03:23,774 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5310 s). First download can take several minutes.
+2026-05-02 01:04:08,774 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5355 s). First download can take several minutes.
+2026-05-02 01:04:53,775 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5400 s). First download can take several minutes.
+2026-05-02 01:05:38,775 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5445 s). First download can take several minutes.
+2026-05-02 01:06:23,776 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5490 s). First download can take several minutes.
+2026-05-02 01:07:08,776 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5535 s). First download can take several minutes.
+2026-05-02 01:07:53,776 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5580 s). First download can take several minutes.
+2026-05-02 01:08:38,777 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5625 s). First download can take several minutes.
+2026-05-02 01:09:23,777 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5670 s). First download can take several minutes.
+2026-05-02 01:10:08,777 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5715 s). First download can take several minutes.
+2026-05-02 01:10:53,778 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5760 s). First download can take several minutes.
+2026-05-02 01:11:38,778 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5805 s). First download can take several minutes.
+2026-05-02 01:12:23,779 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5850 s). First download can take several minutes.
+2026-05-02 01:13:08,779 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5895 s). First download can take several minutes.
+2026-05-02 01:13:53,780 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5940 s). First download can take several minutes.
+2026-05-02 01:14:38,780 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 5985 s). First download can take several minutes.
+2026-05-02 01:15:23,781 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6030 s). First download can take several minutes.
+2026-05-02 01:16:08,782 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6075 s). First download can take several minutes.
+2026-05-02 01:16:53,783 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6120 s). First download can take several minutes.
+2026-05-02 01:17:38,783 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6165 s). First download can take several minutes.
+2026-05-02 01:18:23,784 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6210 s). First download can take several minutes.
+2026-05-02 01:19:08,784 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6255 s). First download can take several minutes.
+2026-05-02 01:19:53,785 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6300 s). First download can take several minutes.
+2026-05-02 01:20:38,785 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6345 s). First download can take several minutes.
+2026-05-02 01:21:23,786 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6390 s). First download can take several minutes.
+2026-05-02 01:22:08,786 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6435 s). First download can take several minutes.
+2026-05-02 01:22:53,787 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6480 s). First download can take several minutes.
+2026-05-02 01:23:38,787 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6525 s). First download can take several minutes.
+2026-05-02 01:24:23,788 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6570 s). First download can take several minutes.
+2026-05-02 01:25:08,788 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6615 s). First download can take several minutes.
+2026-05-02 01:25:53,788 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6660 s). First download can take several minutes.
+2026-05-02 01:26:38,789 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6705 s). First download can take several minutes.
+2026-05-02 01:27:23,789 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6750 s). First download can take several minutes.
+2026-05-02 01:28:08,790 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6795 s). First download can take several minutes.
+2026-05-02 04:18:12,692 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 6819 s). First download can take several minutes.
+2026-05-02 04:24:08,311 INFO device=cpu model_id=Qwen/Qwen2.5-0.5B-Instruct
+2026-05-02 04:24:08,311 WARNING CUDA is not available; training will use CPU (slow). For Day-5 runs use a GPU machine or Colab.
+2026-05-02 04:24:08,311 INFO HF_HOME was unset; using an isolated Hub cache at /home/hiwot/tenacious-b2b-salesperson/tenacious-bench/outputs/preference_lora_smoke/hf_hub_cache so this run does not wait on locks from other projects using ~/.cache/huggingface. To share one cache for all runs, set HF_HOME in .env.
+2026-05-02 04:24:12,545 INFO Loading base weights `Qwen/Qwen2.5-0.5B-Instruct` (tokenizer done).
+2026-05-02 04:24:57,545 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 45 s). First download can take several minutes.
+2026-05-02 04:25:42,546 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 90 s). First download can take several minutes.
+2026-05-02 04:26:27,546 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 135 s). First download can take several minutes.
+2026-05-02 04:27:12,546 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 180 s). First download can take several minutes.
+2026-05-02 04:27:57,547 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 225 s). First download can take several minutes.
+2026-05-02 04:28:42,547 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 270 s). First download can take several minutes.
+2026-05-02 04:29:27,548 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 315 s). First download can take several minutes.
+2026-05-02 04:30:12,548 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 360 s). First download can take several minutes.
+2026-05-02 04:30:57,549 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 405 s). First download can take several minutes.
+2026-05-02 04:31:42,549 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 450 s). First download can take several minutes.
+2026-05-02 04:32:27,550 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 495 s). First download can take several minutes.
+2026-05-02 04:33:12,550 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 540 s). First download can take several minutes.
+2026-05-02 04:33:57,550 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 585 s). First download can take several minutes.
+2026-05-02 04:34:42,551 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 630 s). First download can take several minutes.
+2026-05-02 04:35:27,551 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 675 s). First download can take several minutes.
+2026-05-02 04:36:12,552 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 720 s). First download can take several minutes.
+2026-05-02 04:36:57,552 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 765 s). First download can take several minutes.
+2026-05-02 04:37:42,553 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 810 s). First download can take several minutes.
+2026-05-02 04:38:27,553 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 855 s). First download can take several minutes.
+2026-05-02 04:39:12,554 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 900 s). First download can take several minutes.
+2026-05-02 04:39:57,554 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 945 s). First download can take several minutes.
+2026-05-02 04:40:42,555 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 990 s). First download can take several minutes.
+2026-05-02 04:41:27,555 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1035 s). First download can take several minutes.
+2026-05-02 04:42:12,556 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1080 s). First download can take several minutes.
+2026-05-02 04:42:57,556 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1125 s). First download can take several minutes.
+2026-05-02 04:43:42,557 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1170 s). First download can take several minutes.
+2026-05-02 04:44:27,558 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1215 s). First download can take several minutes.
+2026-05-02 04:45:12,559 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1260 s). First download can take several minutes.
+2026-05-02 04:45:57,559 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1305 s). First download can take several minutes.
+2026-05-02 04:46:42,560 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1350 s). First download can take several minutes.
+2026-05-02 12:43:20,700 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1392 s). First download can take several minutes.
+2026-05-02 12:44:05,701 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1437 s). First download can take several minutes.
+2026-05-02 12:44:50,701 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1482 s). First download can take several minutes.
+2026-05-02 12:45:35,701 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1527 s). First download can take several minutes.
+2026-05-02 12:46:20,702 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1572 s). First download can take several minutes.
+2026-05-02 12:47:05,702 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1617 s). First download can take several minutes.
+2026-05-02 12:47:50,703 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1662 s). First download can take several minutes.
+2026-05-02 12:48:35,703 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1707 s). First download can take several minutes.
+2026-05-02 12:49:20,704 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1752 s). First download can take several minutes.
+2026-05-02 12:50:05,704 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1797 s). First download can take several minutes.
+2026-05-02 12:50:50,704 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1842 s). First download can take several minutes.
+2026-05-02 12:51:35,705 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1887 s). First download can take several minutes.
+2026-05-02 12:52:20,705 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1932 s). First download can take several minutes.
+2026-05-02 12:53:05,706 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 1977 s). First download can take several minutes.
+2026-05-02 12:53:50,707 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2022 s). First download can take several minutes.
+2026-05-02 12:54:35,707 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2067 s). First download can take several minutes.
+2026-05-02 12:55:20,708 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2112 s). First download can take several minutes.
+2026-05-02 12:56:05,709 INFO Still in progress: model weights `Qwen/Qwen2.5-0.5B-Instruct` (elapsed 2157 s). First download can take several minutes.
+2026-05-02 12:16:06,231 INFO device=cuda model_id=Qwen/Qwen2.5-0.5B-Instruct
+2026-05-02 12:16:06,232 INFO HF_HOME was unset; using an isolated Hub cache at /content/tenacious-bench/outputs/preference_lora_day5/hf_hub_cache so this run does not wait on locks from other projects using ~/.cache/huggingface. To share one cache for all runs, set HF_HOME in .env.
+2026-05-02 12:16:07,554 WARNING Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-05-02 12:16:10,809 INFO Loading base weights `Qwen/Qwen2.5-0.5B-Instruct` (tokenizer done).
+2026-05-02 12:16:18,607 INFO Finished tokenizer + base model load from Hub in 0.2 min. This time is NOT the Week 11 “30–90 min training” budget—only steps after `trainer.train()` starts count toward that.
+2026-05-02 12:16:26,377 INFO hyperparameters {
+  "started_at_utc": "2026-05-02T12:16:26Z",
+  "hub_prefetch_wall_s": 12.374,
+  "hf_home": "/content/tenacious-bench/outputs/preference_lora_day5/hf_hub_cache",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "train_jsonl": "/content/tenacious-bench/training_data/for_unsloth/train.jsonl",
+  "valid_jsonl": "/content/tenacious-bench/training_data/for_unsloth/valid.jsonl",
+  "skip_eval": false,
+  "dpo_beta": 0.1,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "target_modules": [
+    "q_proj",
+    "up_proj",
+    "gate_proj",
+    "down_proj",
+    "o_proj",
+    "k_proj",
+    "v_proj"
+  ],
+  "num_train_epochs": 1.0,
+  "max_steps": 0,
+  "per_device_train_batch_size": 1,
+  "gradient_accumulation_steps": 8,
+  "learning_rate": 5e-06,
+  "logging_steps": 5,
+  "eval_steps": 50
+}
+2026-05-02 12:16:26,377 INFO --- Day-5 training phase start --- Monitor train/loss and (if enabled) eval metrics in training_run_metrics.jsonl. Week 11 guidance: expect ~30–90 min total *training* wall time on GPU; if loss/eval show no useful movement by ~30 min of training, stop and audit preferences/data rather than extending compute.
+2026-05-02 12:29:00,214 INFO device=cuda model_id=Qwen/Qwen2.5-0.5B-Instruct
+2026-05-02 12:29:00,215 INFO HF_HOME was unset; using an isolated Hub cache at /content/tenacious-bench/outputs/preference_lora_day5/hf_hub_cache so this run does not wait on locks from other projects using ~/.cache/huggingface. To share one cache for all runs, set HF_HOME in .env.
+2026-05-02 12:29:02,907 INFO Loading base weights `Qwen/Qwen2.5-0.5B-Instruct` (tokenizer done).
+2026-05-02 12:29:03,148 WARNING Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-05-02 12:29:04,408 INFO Finished tokenizer + base model load from Hub in 0.1 min. This time is NOT the Week 11 “30–90 min training” budget—only steps after `trainer.train()` starts count toward that.
+2026-05-02 12:29:08,436 INFO hyperparameters {
+  "started_at_utc": "2026-05-02T12:29:08Z",
+  "hub_prefetch_wall_s": 4.193,
+  "hf_home": "/content/tenacious-bench/outputs/preference_lora_day5/hf_hub_cache",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "train_jsonl": "/content/tenacious-bench/training_data/for_unsloth/train.jsonl",
+  "valid_jsonl": null,
+  "skip_eval": true,
+  "dpo_beta": 0.1,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "target_modules": [
+    "v_proj",
+    "q_proj",
+    "k_proj",
+    "up_proj",
+    "o_proj",
+    "gate_proj",
+    "down_proj"
+  ],
+  "num_train_epochs": 1.0,
+  "max_steps": 0,
+  "per_device_train_batch_size": 1,
+  "gradient_accumulation_steps": 8,
+  "learning_rate": 5e-06,
+  "logging_steps": 5,
+  "eval_steps": null
+}
+2026-05-02 12:29:08,437 WARNING Validation is OFF (--skip-eval). For Day-5 deliverables you need train + validation curves—re-run without --skip-eval for the core run.
+2026-05-02 12:29:08,437 INFO --- Day-5 training phase start --- Monitor train/loss and (if enabled) eval metrics in training_run_metrics.jsonl. Week 11 guidance: expect ~30–90 min total *training* wall time on GPU; if loss/eval show no useful movement by ~30 min of training, stop and audit preferences/data rather than extending compute.
+2026-05-02 12:36:01,471 INFO finished {
+  "finished_at_utc": "2026-05-02T12:36:01Z",
+  "global_step": 16,
+  "wall_time_trainer_setup_plus_train_s": 417.04,
+  "wall_time_training_loop_only_s": 413.034,
+  "hub_prefetch_wall_s": 4.193,
+  "log_history_tail": [
+    {
+      "loss": 0.6788855075836182,
+      "grad_norm": 1.5921818017959595,
+      "learning_rate": 3.7500000000000005e-06,
+      "entropy": 3.238200718164444,
+      "num_tokens": 54866.0,
+      "logits/chosen": -0.5915611455099266,
+      "logits/rejected": -0.7027422688621464,
+      "mean_token_accuracy": 0.25611840300261973,
+      "rewards/chosen": 0.0019284818787127732,
+      "rewards/rejected": -0.027187157286971343,
+      "rewards/accuracies": 0.575,
+      "rewards/margins": 0.029115638812072575,
+      "logps/chosen": -427.04711151123047,
+      "logps/rejected": -457.1353645324707,
+      "epoch": 0.3125,
+      "step": 5
+    },
+    {
+      "loss": 0.628493070602417,
+      "grad_norm": 1.5194085836410522,
+      "learning_rate": 2.1875000000000002e-06,
+      "entropy": 3.250943648815155,
+      "num_tokens": 110465.0,
+      "logits/chosen": -0.5971526880247454,
+      "logits/rejected": -0.6498020338455841,
+      "mean_token_accuracy": 0.2607721608132124,
+      "rewards/chosen": 0.009446220399331651,
+      "rewards/rejected": -0.1252679834840819,
+      "rewards/accuracies": 0.975,
+      "rewards/margins": 0.13471420239657164,
+      "logps/chosen": -432.55629272460936,
+      "logps/rejected": -481.82912673950193,
+      "epoch": 0.625,
+      "step": 10
+    },
+    {
+      "loss": 0.5784941196441651,
+      "grad_norm": 1.653509259223938,
+      "learning_rate": 6.25e-07,
+      "entropy": 3.282146453857422,
+      "num_tokens": 166050.0,
+      "logits/chosen": -0.5762713035748158,
+      "logits/rejected": -0.7159467170301481,
+      "mean_token_accuracy": 0.25379080027341844,
+      "rewards/chosen": 0.04480980063090101,
+      "rewards/rejected": -0.20072292825207114,
+      "rewards/accuracies": 1.0,
+      "rewards/margins": 0.24553272854536773,
+      "logps/chosen": -484.19840774536135,
+      "logps/rejected": -510.49359703063965,
+      "epoch": 0.9375,
+      "step": 15
+    },
+    {
+      "train_runtime": 411.9485,
+      "train_samples_per_second": 0.311,
+      "train_steps_per_second": 0.039,
+      "total_flos": 401211244423680.0,
+      "train_loss": 0.6256402768194675,
+      "entropy": 3.1741172075271606,
+      "num_tokens": 177146.0,
+      "logits/chosen": -0.6114329861158683,
+      "logits/rejected": -0.7879529883090737,
+      "mean_token_accuracy": 0.25666971877217293,
+      "rewards/chosen": 0.047625923180021346,
+      "rewards/rejected": -0.19255619728937745,
+      "rewards/accuracies": 1.0,
+      "rewards/margins": 0.24018211849033833,
+      "logps/chosen": -477.7179374694824,
+      "logps/rejected": -493.9164009094238,
+      "epoch": 1.0,
+      "step": 16
+    }
+  ]
+}
+
+--- run summary ---
+{
+  "finished_at_utc": "2026-05-02T12:36:01Z",
+  "global_step": 16,
+  "wall_time_trainer_setup_plus_train_s": 417.04,
+  "wall_time_training_loop_only_s": 413.034,
+  "hub_prefetch_wall_s": 4.193,
+  "log_history_tail": [
+    {
+      "loss": 0.6788855075836182,
+      "grad_norm": 1.5921818017959595,
+      "learning_rate": 3.7500000000000005e-06,
+      "entropy": 3.238200718164444,
+      "num_tokens": 54866.0,
+      "logits/chosen": -0.5915611455099266,
+      "logits/rejected": -0.7027422688621464,
+      "mean_token_accuracy": 0.25611840300261973,
+      "rewards/chosen": 0.0019284818787127732,
+      "rewards/rejected": -0.027187157286971343,
+      "rewards/accuracies": 0.575,
+      "rewards/margins": 0.029115638812072575,
+      "logps/chosen": -427.04711151123047,
+      "logps/rejected": -457.1353645324707,
+      "epoch": 0.3125,
+      "step": 5
+    },
+    {
+      "loss": 0.628493070602417,
+      "grad_norm": 1.5194085836410522,
+      "learning_rate": 2.1875000000000002e-06,
+      "entropy": 3.250943648815155,
+      "num_tokens": 110465.0,
+      "logits/chosen": -0.5971526880247454,
+      "logits/rejected": -0.6498020338455841,
+      "mean_token_accuracy": 0.2607721608132124,
+      "rewards/chosen": 0.009446220399331651,
+      "rewards/rejected": -0.1252679834840819,
+      "rewards/accuracies": 0.975,
+      "rewards/margins": 0.13471420239657164,
+      "logps/chosen": -432.55629272460936,
+      "logps/rejected": -481.82912673950193,
+      "epoch": 0.625,
+      "step": 10
+    },
+    {
+      "loss": 0.5784941196441651,
+      "grad_norm": 1.653509259223938,
+      "learning_rate": 6.25e-07,
+      "entropy": 3.282146453857422,
+      "num_tokens": 166050.0,
+      "logits/chosen": -0.5762713035748158,
+      "logits/rejected": -0.7159467170301481,
+      "mean_token_accuracy": 0.25379080027341844,
+      "rewards/chosen": 0.04480980063090101,
+      "rewards/rejected": -0.20072292825207114,
+      "rewards/accuracies": 1.0,
+      "rewards/margins": 0.24553272854536773,
+      "logps/chosen": -484.19840774536135,
+      "logps/rejected": -510.49359703063965,
+      "epoch": 0.9375,
+      "step": 15
+    },
+    {
+      "train_runtime": 411.9485,
+      "train_samples_per_second": 0.311,
+      "train_steps_per_second": 0.039,
+      "total_flos": 401211244423680.0,
+      "train_loss": 0.6256402768194675,
+      "entropy": 3.1741172075271606,
+      "num_tokens": 177146.0,
+      "logits/chosen": -0.6114329861158683,
+      "logits/rejected": -0.7879529883090737,
+      "mean_token_accuracy": 0.25666971877217293,
+      "rewards/chosen": 0.047625923180021346,
+      "rewards/rejected": -0.19255619728937745,
+      "rewards/accuracies": 1.0,
+      "rewards/margins": 0.24018211849033833,
+      "logps/chosen": -477.7179374694824,
+      "logps/rejected": -493.9164009094238,
+      "epoch": 1.0,
+      "step": 16
+    }
+  ]
+}
