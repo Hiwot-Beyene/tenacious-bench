@@ -30,6 +30,11 @@ Usage:
 
 Deliverable `training_run.log`: hyperparameters are logged; train/eval curves live in
 `training_run_metrics.jsonl` when validation is enabled (omit `--skip-eval` for the real Day-5 run).
+
+Rubric alignment (Week 11): all hyperparameters explicit on the CLI or in `training_meta.json`;
+`--seed` fixed and logged; `--model-revision` pins HF weights; LoRA-only via `peft_config` +
+`DPOTrainer(ref_model=None)`; Path B uses `DPOTrainer` only; loss to file JSONL and optional
+TensorBoard (`--report-to tensorboard`).
 """
 from __future__ import annotations
 
@@ -37,12 +42,13 @@ import argparse
 import json
 import logging
 import os
+import random
 import sys
 import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
@@ -78,6 +84,25 @@ def _call_with_hub_heartbeat(log: logging.Logger, label: str, fn):
         stop.set()
 
 
+def _set_global_seed(seed: int) -> None:
+    """Fix RNGs for reproducible runs (same seed + same HF revision + deterministic ops)."""
+    random.seed(seed)
+    try:
+        import numpy as np
+
+        np.random.seed(seed)
+    except ImportError:
+        pass
+    try:
+        import torch
+
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+    except ImportError:
+        pass
+
+
 def _setup_logging(log_path: Path) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     root = logging.getLogger()
@@ -97,7 +122,7 @@ def main() -> None:
         import torch
         from datasets import load_dataset
         from peft import LoraConfig
-        from transformers import AutoModelForCausalLM, AutoTokenizer, TrainerCallback
+        from transformers import AutoModelForCausalLM, AutoTokenizer, TrainerCallback, set_seed
         from trl import DPOConfig, DPOTrainer
     except ImportError as e:
         raise SystemExit(
@@ -114,17 +139,58 @@ def main() -> None:
         "--model-id",
         type=str,
         default="Qwen/Qwen2.5-0.5B-Instruct",
-        help="HF hub id; replace with the pinned Week 11 backbone when training for real.",
+        help="HF hub id (Week 11: pin Qwen3.5 0.8B/2B/4B Instruct here).",
+    )
+    ap.add_argument(
+        "--model-revision",
+        type=str,
+        default=None,
+        help="HF hub git revision (commit SHA or branch) for reproducible weight snapshots.",
+    )
+    ap.add_argument(
+        "--seed",
+        type=int,
+        default=11711,
+        help="Global RNG seed (logged + passed to Trainer); visible for reproducibility.",
     )
     ap.add_argument("--max-steps", type=int, default=0, help="0 = use num_train_epochs only.")
     ap.add_argument("--num-train-epochs", type=float, default=1.0)
     ap.add_argument("--per-device-train-batch-size", type=int, default=1)
+    ap.add_argument("--per-device-eval-batch-size", type=int, default=1)
     ap.add_argument("--gradient-accumulation-steps", type=int, default=8)
     ap.add_argument("--learning-rate", type=float, default=5e-6)
+    ap.add_argument(
+        "--lr-scheduler-type",
+        type=str,
+        default="linear",
+        help="HF TrainingArguments lr_scheduler_type (e.g. linear, cosine, constant).",
+    )
+    ap.add_argument(
+        "--warmup-steps",
+        type=int,
+        default=0,
+        help="Linear/cosine warmup steps (0 = none).",
+    )
+    ap.add_argument(
+        "--warmup-ratio",
+        type=float,
+        default=0.0,
+        help="If >0 and warmup_steps==0, fraction of total train steps to warm up.",
+    )
+    ap.add_argument("--lora-r", type=int, default=16, help="LoRA rank (PEFT only; no full finetune).")
+    ap.add_argument("--lora-alpha", type=int, default=32, help="LoRA alpha scaling.")
+    ap.add_argument("--lora-dropout", type=float, default=0.05, help="LoRA dropout.")
     ap.add_argument("--beta", type=float, default=0.1, help="DPO beta.")
     ap.add_argument("--logging-steps", type=int, default=5)
     ap.add_argument("--eval-steps", type=int, default=50)
     ap.add_argument("--save-steps", type=int, default=200)
+    ap.add_argument(
+        "--report-to",
+        type=str,
+        default="none",
+        choices=("none", "tensorboard"),
+        help="Extra loss sinks: none | tensorboard (train/eval scalars). File logging always on.",
+    )
     ap.add_argument("--log-file", type=Path, default=REPO_ROOT / "reports" / "training_run.log")
     ap.add_argument("--metrics-jsonl", type=Path, default=REPO_ROOT / "reports" / "training_run_metrics.jsonl")
     ap.add_argument(
@@ -136,6 +202,9 @@ def main() -> None:
 
     if not args.train_jsonl.exists():
         raise SystemExit(f"missing {args.train_jsonl}; run scripts/export_unsloth_splits.py")
+
+    _set_global_seed(args.seed)
+    set_seed(args.seed)
 
     args.metrics_jsonl.parent.mkdir(parents=True, exist_ok=True)
     if args.metrics_jsonl.exists():
@@ -170,6 +239,10 @@ def main() -> None:
 
     hub_phase_t0 = time.perf_counter()
 
+    hub_kw: Dict[str, Any] = {"trust_remote_code": True}
+    if args.model_revision:
+        hub_kw["revision"] = args.model_revision
+
     ds = load_dataset("json", data_files={"train": str(args.train_jsonl)})["train"]
     eval_ds = None
     if not args.skip_eval and args.valid_jsonl.exists():
@@ -178,7 +251,7 @@ def main() -> None:
     tokenizer = _call_with_hub_heartbeat(
         log,
         f"tokenizer `{args.model_id}`",
-        lambda: AutoTokenizer.from_pretrained(args.model_id, trust_remote_code=True),
+        lambda: AutoTokenizer.from_pretrained(args.model_id, **hub_kw),
     )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -194,7 +267,7 @@ def main() -> None:
     model = _call_with_hub_heartbeat(
         log,
         f"model weights `{args.model_id}`",
-        lambda: AutoModelForCausalLM.from_pretrained(args.model_id, **model_kw),
+        lambda: AutoModelForCausalLM.from_pretrained(args.model_id, **{**model_kw, **hub_kw}),
     )
     if device == "cpu":
         model = model.to(torch.device("cpu"))
@@ -208,29 +281,43 @@ def main() -> None:
     )
 
     peft_config = LoraConfig(
-        r=16,
-        lora_alpha=32,
-        lora_dropout=0.05,
+        r=args.lora_r,
+        lora_alpha=args.lora_alpha,
+        lora_dropout=args.lora_dropout,
         bias="none",
         task_type="CAUSAL_LM",
         target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
     )
 
+    report_to: List[str] = []
+    logging_dir: Optional[str] = None
+    if args.report_to == "tensorboard":
+        report_to = ["tensorboard"]
+        logging_dir = str(args.output_dir / "tb_logs")
+
     train_kw: Dict[str, Any] = dict(
         output_dir=str(args.output_dir),
         per_device_train_batch_size=args.per_device_train_batch_size,
+        per_device_eval_batch_size=args.per_device_eval_batch_size,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         learning_rate=args.learning_rate,
+        lr_scheduler_type=args.lr_scheduler_type,
+        warmup_steps=args.warmup_steps,
+        warmup_ratio=args.warmup_ratio,
         num_train_epochs=args.num_train_epochs,
         max_steps=args.max_steps if args.max_steps > 0 else -1,
         logging_steps=args.logging_steps,
         save_steps=args.save_steps,
         beta=args.beta,
+        seed=args.seed,
+        data_seed=args.seed,
         bf16=device == "cuda" and torch.cuda.is_bf16_supported(),
         fp16=device == "cuda" and not torch.cuda.is_bf16_supported(),
-        report_to=[],
+        report_to=report_to,
         remove_unused_columns=False,
     )
+    if logging_dir is not None:
+        train_kw["logging_dir"] = logging_dir
     if eval_ds is not None:
         train_kw["eval_strategy"] = "steps"
         train_kw["eval_steps"] = args.eval_steps
@@ -278,11 +365,32 @@ def main() -> None:
         callbacks=[MetricsJsonlCallback(args.metrics_jsonl)],
     )
 
+    try:
+        import peft as _peft
+        import transformers as _tf
+        import trl as _trl
+
+        _lib_versions = {
+            "torch": torch.__version__,
+            "transformers": _tf.__version__,
+            "trl": _trl.__version__,
+            "peft": getattr(_peft, "__version__", "unknown"),
+        }
+    except Exception as e:  # pragma: no cover
+        _lib_versions = {"torch": torch.__version__, "library_versions_error": repr(e)}
+
     meta = {
         "started_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "hub_prefetch_wall_s": round(hub_phase_s, 3),
         "hf_home": os.environ.get("HF_HOME"),
+        "path": "B",
+        "trainer_framework": "TRL.DPOTrainer",
+        "finetuning_mode": "lora_peft_only",
+        "full_finetune_enabled": False,
+        "reference_model_policy": "DPOTrainer(ref_model=None) with PEFT implicit reference",
         "model_id": args.model_id,
+        "model_revision_hf": args.model_revision,
+        "seed": args.seed,
         "train_jsonl": str(args.train_jsonl),
         "valid_jsonl": str(args.valid_jsonl) if (not args.skip_eval and args.valid_jsonl.exists()) else None,
         "skip_eval": bool(args.skip_eval),
@@ -294,12 +402,27 @@ def main() -> None:
         "num_train_epochs": args.num_train_epochs,
         "max_steps": args.max_steps,
         "per_device_train_batch_size": args.per_device_train_batch_size,
+        "per_device_eval_batch_size": args.per_device_eval_batch_size,
         "gradient_accumulation_steps": args.gradient_accumulation_steps,
         "learning_rate": args.learning_rate,
+        "lr_scheduler_type": args.lr_scheduler_type,
+        "warmup_steps": args.warmup_steps,
+        "warmup_ratio": args.warmup_ratio,
         "logging_steps": args.logging_steps,
         "eval_steps": args.eval_steps if eval_ds is not None else None,
+        "loss_logging": {
+            "file_jsonl": str(args.metrics_jsonl),
+            "log_file": str(args.log_file),
+            "tensorboard": args.report_to == "tensorboard",
+            "tensorboard_dir": logging_dir,
+            "notes": "Trainer on_log writes train/loss; eval_* when validation enabled.",
+        },
+        "library_versions": _lib_versions,
     }
-    log.info("hyperparameters %s", json.dumps(meta, indent=2))
+    log.info(
+        "Path B — TRL DPOTrainer + LoRA only (no full-weight updates). Hyperparameters:\n%s",
+        json.dumps(meta, indent=2),
+    )
     (args.output_dir / "training_meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
 
     if args.skip_eval:

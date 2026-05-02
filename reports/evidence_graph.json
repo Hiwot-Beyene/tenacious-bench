@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-05-02T16:37:59Z",
+  "challenge": "TRP1 Week 11 \u2014 Tenacious-Bench",
+  "repository_root_relative": ".",
+  "act_v_publication_urls": {
+    "huggingface_dataset": {
+      "url": "https://huggingface.co/datasets/hiwot-beyene/tenacious-bench-v0.1",
+      "repo_id": "hiwot-beyene/tenacious-bench-v0.1",
+      "revision": null
+    },
+    "huggingface_model": {
+      "url": "https://huggingface.co/hiwot-beyene/tenacious-bench-lora",
+      "repo_id": "hiwot-beyene/tenacious-bench-lora",
+      "revision": null,
+      "notes": "Path B: PEFT LoRA adapter; load with base model from training_meta.json"
+    },
+    "blog_post": {
+      "url": "https://hiwotbeyene.substack.com/p/what-style-benches-miss-about-b2b",
+      "title": "What \u03c4\u00b2-Style Benches Miss About B2B Sales\u2014And What I Built Instead",
+      "platform": "Substack"
+    },
+    "executive_memo": {
+      "pdf_url": "https://github.com/Hiwot-Beyene/tenacious-bench/raw/main/memo.pdf",
+      "source_in_repo": "memo.pdf (root); regenerate: uv run python scripts/generate_memo_pdf.py",
+      "markdown_source": "docs/act_v_executive_memo.md"
+    },
+    "community_engagement": [
+      {
+        "type": "huggingface_dataset_discussions",
+        "url": "https://huggingface.co/datasets/hiwot-beyene/tenacious-bench-v0.1/discussions",
+        "notes": "Public community tab for the published dataset (Week 11 engagement artifact). Optionally also file an issue on sierra-research/tau2-bench per docs/act_v_publish_and_community_guide.md."
+      }
+    ]
+  },
+  "evidence_artifacts": {
+    "audit_memo": "docs/audit_memo.md",
+    "methodology": "docs/methodology.md",
+    "methodology_rationale_path_b": "docs/methodology_rationale.md",
+    "datasheet": "docs/datasheet.md",
+    "scoring_evaluator": "evaluation/scoring_evaluator.py",
+    "tasks_all_jsonl": "data/tasks_all.jsonl",
+    "preferences_jsonl": "training_data/preferences.jsonl",
+    "contamination_report": "reports/contamination_check.json",
+    "inter_rater": "reports/inter_rater_agreement.md",
+    "composition_crosstab": "reports/composition_crosstab.md",
+    "model_card": "reports/model_card.md",
+    "ceo_cfo_memo_pdf": "memo.pdf",
+    "training_run_log": "reports/training_run.log",
+    "ablation_results": "reports/ablation_results.json",
+    "held_out_traces": "reports/held_out_traces.jsonl"
+  },
+  "preference_corpus_manifest": {
+    "schema_version": "1.1",
+    "generated_at_utc": "2026-05-01T17:48:12Z",
+    "git_head": "823abc5add2f2e707a55c30803882bbd6e2f17b2",
+    "scoring_evaluator_sha256": "246b65e60710c0388d04e2b9eb2b0f3206085d8628f5da83a20e90273bc782fd",
+    "train_jsonl": "data/tasks_train.jsonl",
+    "builder_cli": {
+      "min_pairs_per_dimension": 1,
+      "max_pairs_per_task": null,
+      "mutators": "all"
+    },
+    "n_rows_in_train_jsonl": 120,
+    "n_tasks_partition_train": 120,
+    "n_skipped_chosen_not_pass": 0,
+    "n_skipped_chosen_score_error": 0,
+    "n_skipped_finalize_or_still_pass": 126,
+    "n_mutator_failures_by_dimension": {
+      "bench_commitment_safety": 20,
+      "tone_marker_safety": 24,
+      "multi_system_coordination": 18,
+      "non_condescending_gap_framing": 30
+    },
+    "n_pairs": 142,
+    "pairs_by_failure_dimension": {
+      "weak_signal_calibration": 78,
+      "bench_commitment_safety": 46,
+      "tone_marker_safety": 12,
+      "multi_system_coordination": 4,
+      "non_condescending_gap_framing": 2
+    },
+    "pairs_by_source_mode": {
+      "trace_derived": 42,
+      "programmatic": 43,
+      "multi_llm_synthesis": 35,
+      "hand_authored_adversarial": 22
+    }
+  },
+  "training_run_meta": {
+    "started_at_utc": "2026-05-02T12:29:08Z",
+    "hub_prefetch_wall_s": 4.193,
+    "hf_home": "/content/tenacious-bench/outputs/preference_lora_day5/hf_hub_cache",
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "train_jsonl": "/content/tenacious-bench/training_data/for_unsloth/train.jsonl",
+    "valid_jsonl": null,
+    "skip_eval": true,
+    "dpo_beta": 0.1,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": [
+      "v_proj",
+      "q_proj",
+      "k_proj",
+      "up_proj",
+      "o_proj",
+      "gate_proj",
+      "down_proj"
+    ],
+    "num_train_epochs": 1.0,
+    "max_steps": 0,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "learning_rate": 5e-06,
+    "logging_steps": 5,
+    "eval_steps": null
+  },
+  "training_meta_path_resolved": "outputs/preference_lora_day5/training_meta.json",
+  "held_out_ablation": {
+    "source_file": "reports/ablation_results.json",
+    "generated_at_utc": "2026-05-02T13:24:54Z",
+    "harness": {
+      "path": "B",
+      "delta_a_definition": "trained (PEFT adapter) vs baseline (adapter disabled, no system prompt)",
+      "delta_b_definition": "trained vs prompt_only (same backbone, adapter off; instruction-only control)",
+      "delta_c_definition": "informational \u03c4\u00b2 Week 10 score only (no re-run)",
+      "failure_handling": "try/except per pair; errors recorded in held_out_traces.jsonl"
+    },
+    "headline_metrics": {
+      "n_pairs_scored": 0,
+      "comparisons_run": [
+        "delta_c"
+      ],
+      "delta_c_tau2_informational": {
+        "week10_score_on_file": 0.42
+      }
+    }
+  }
+}

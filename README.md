@@ -1,145 +1,228 @@
-# Tenacious-Bench
+# Tenacious-Bench v0.1
 
-Tenacious-Bench is a sales-agent evaluation bench for the Tenacious workflow domain. It targets behaviors that public benchmarks under-grade in B2B outreach: confidence calibration under weak signals, bench commitment safety, tone-marker compliance, coordination with CRM overrides, and non-condescending gap framing.
+**Author:** [Hiwot Beyene](https://huggingface.co/hiwot-beyene) · **Source:** [github.com/Hiwot-Beyene/tenacious-bench](https://github.com/Hiwot-Beyene/tenacious-bench)
 
-## Current Status (Week 11 — Act II + Act III data)
+Tenacious-Bench is a sales-agent **evaluation** harness and domain dataset for the Tenacious B2B outreach workflow. It targets what generic benchmarks under-grade: **weak-signal calibration**, **bench/capacity honesty**, **tone-marker compliance**, **CRM/human override obedience**, and **non-condescending gap framing**. This repo is my Week 11 TRP1 deliverable: **Path B** preference tuning (DPO + LoRA critic), public **Hugging Face** artifacts, **blog**, **community** presence, **`memo.pdf`**, and **`evidence_graph.json`**.
 
-### Completed (robust core)
-- Audit memo with Week 10 evidence links: [`docs/audit_memo.md`](docs/audit_memo.md)
-- Methodology rationale (Path B): [`docs/methodology.md`](docs/methodology.md)
-- Mechanical scoring evaluator: [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py)
-- Example tasks (incl. adversarial fail fixture): [`evaluation/tasks_examples/`](evaluation/tasks_examples/)
-- Formal task schema: [`schema.json`](schema.json)
-- Datasheet draft with Gebru + Pushkarna layers: [`docs/datasheet.md`](docs/datasheet.md)
-- **Act II deliverable folder** [`tenacious_bench_v0.1/`](tenacious_bench_v0.1/) — **generated** by [`scripts/build_tenacious_bench_v01_package.py`](scripts/build_tenacious_bench_v01_package.py) (use `--run-checks` to run contamination + composition + inter-rater first). Only [`tenacious_bench_v0.1/README.md`](tenacious_bench_v0.1/README.md) is tracked; shards and copied reports are gitignored to avoid duplicating `data/` and `reports/`.
-- **v0.1 corpus (240 tasks)** from **real company seeds** (Crunchbase ODM + Conversion Engine workspaces in [`data/company_seeds.json`](data/company_seeds.json)) and **expanded scenario catalog** [`bench_corpus/scenario_catalog.py`](bench_corpus/scenario_catalog.py) (ICP segments 1–4, AI-maturity / Segment-4 gating, layoffs.fyi + enrichment tool failures, HubSpot/sequence/CRM, Langfuse, email-vs-SMS, bench/MSA/DPA/pricing gates, audit probes ADV-\* from [`docs/audit_memo.md`](docs/audit_memo.md)). Each task carries `coverage.edgecase_tags` + `audit_probes`. Builder: [`scripts/build_corpus.py`](scripts/build_corpus.py); composition: [`scripts/verify_composition.py`](scripts/verify_composition.py). [`scripts/materialize_corpus.py`](scripts/materialize_corpus.py) shims to `build_corpus.py`.
-- **Inter-rater agreement (n=30)**: [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/inter_rater/`](reports/inter_rater/), [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py)
-- Generation pipeline scaffolds + routing policy: [`generation/`](generation/), [`generation/routing_policy.md`](generation/routing_policy.md)
-- Judge prompts committed as text: [`prompts/`](prompts/)
-- **Four common-reading synthesis memos** (critical engagement):
-  - [`synthesis_memos/memo_liu_2024_synthetic_data.md`](synthesis_memos/memo_liu_2024_synthetic_data.md)
-  - [`synthesis_memos/memo_gu_llm_as_judge.md`](synthesis_memos/memo_gu_llm_as_judge.md)
-  - [`synthesis_memos/memo_gebru_pushkarna_documentation.md`](synthesis_memos/memo_gebru_pushkarna_documentation.md)
-  - [`synthesis_memos/memo_chen_emnlp2025_contamination.md`](synthesis_memos/memo_chen_emnlp2025_contamination.md)
-- **Contamination pipeline:** [`generation/contamination_check.py`](generation/contamination_check.py) — run [`scripts/run_contamination_check.py`](scripts/run_contamination_check.py) → [`reports/contamination_check.json`](reports/contamination_check.json)
-- **Inter-rater:** [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py); optional human Pass2 — [`docs/inter_rater_human_protocol.md`](docs/inter_rater_human_protocol.md); **Tenacious-Bench scorer** revision log — [`docs/rubric_revision_log.md`](docs/rubric_revision_log.md)
+---
 
-### Act III — Path B training data (Day 4 deliverables)
-- **Rationale (one page):** [`docs/methodology_rationale.md`](docs/methodology_rationale.md) — Path B, SimPO primary, DPO/ORPO fallbacks, Li + Gu controls, ≥3 Week 10 trace IDs.
-- **Critic prompt + mutators:** [`bench_corpus/critic_prompt.py`](bench_corpus/critic_prompt.py), [`bench_corpus/preference_mutators.py`](bench_corpus/preference_mutators.py).
-- **Artifacts:** [`training_data/preferences.jsonl`](training_data/preferences.jsonl), [`training_data/manifest.json`](training_data/manifest.json), schema notes in [`training_data/README.md`](training_data/README.md).
-- **Builder + leakage QA:** [`scripts/build_path_b_preferences.py`](scripts/build_path_b_preferences.py), [`scripts/verify_training_data_leakage.py`](scripts/verify_training_data_leakage.py).
-- **Path-specific synthesis memos:** [`synthesis_memos/memo_rafailov_dpo_path_b.md`](synthesis_memos/memo_rafailov_dpo_path_b.md), [`synthesis_memos/memo_meng_simpo_path_b.md`](synthesis_memos/memo_meng_simpo_path_b.md), [`synthesis_memos/memo_hong_orpo_path_b.md`](synthesis_memos/memo_hong_orpo_path_b.md), [`synthesis_memos/memo_li_preference_leakage_path_b.md`](synthesis_memos/memo_li_preference_leakage_path_b.md), [`synthesis_memos/memo_kim_prometheus2_path_b.md`](synthesis_memos/memo_kim_prometheus2_path_b.md).
+## Status
+
+| Phase | State |
+|-------|--------|
+| Acts I–II | Audit, schema, ~240 tasks, partitions, datasheet, contamination + inter-rater |
+| Act III | Path B `preferences.jsonl` + leakage QA |
+| Act IV | TRL `DPOTrainer` + LoRA; sealed ablation harness; `reports/model_card.md` |
+| Act V | HF dataset + adapter published; Substack blog; HF discussions; CEO/CFO memo PDF |
+
+**Declared path:** **B** — preference-tuned judge/critic (see [`docs/methodology.md`](docs/methodology.md)).
+
+---
+
+## Public artifacts (URLs)
+
+These satisfy the Week 11 **final submission** public-URL checklist and are mirrored in [`reports/act_v_urls.json`](reports/act_v_urls.json).
+
+| Artifact | URL |
+|----------|-----|
+| **Hugging Face dataset** | [https://huggingface.co/datasets/hiwot-beyene/tenacious-bench-v0.1](https://huggingface.co/datasets/hiwot-beyene/tenacious-bench-v0.1) |
+| **Hugging Face model (Path B LoRA adapter)** | [https://huggingface.co/hiwot-beyene/tenacious-bench-lora](https://huggingface.co/hiwot-beyene/tenacious-bench-lora) |
+| **Technical blog post** (1,200–2,000 words) | [https://hiwotbeyene.substack.com/p/what-style-benches-miss-about-b2b](https://hiwotbeyene.substack.com/p/what-style-benches-miss-about-b2b) |
+| **Community engagement** | [Hugging Face dataset discussions](https://huggingface.co/datasets/hiwot-beyene/tenacious-bench-v0.1/discussions) (public community tab). Optional cross-post: [τ²-Bench issues](https://github.com/sierra-research/tau2-bench/issues) — template in [`docs/act_v_publish_and_community_guide.md`](docs/act_v_publish_and_community_guide.md). |
+| **CEO/CFO memo** | **`memo.pdf`** at repo root — generate: `uv sync --extra pdf && uv run python scripts/generate_memo_pdf.py` |
+| **Evidence graph** | [`reports/evidence_graph.json`](reports/evidence_graph.json) — run `uv run python scripts/emit_evidence_graph.py` after editing `act_v_urls.json` |
+
+Hub model card (generated): [hiwot-beyene/tenacious-bench-lora](https://huggingface.co/hiwot-beyene/tenacious-bench-lora) — align YAML metadata in the Hub UI if you see a metadata warning.
+
+---
+
+## Quickstart: reproduce a headline number (< 1 hour)
+
+The challenge asks for a **quickstart a stranger can run** to hit a **headline** metric. Two tiers:
+
+### A) Mechanical scorer only (CPU, ~5 minutes)
+
+No ML stack required beyond Python 3.11+.
 
 ```bash
-python scripts/build_path_b_preferences.py
-python scripts/verify_training_data_leakage.py
+git clone https://github.com/Hiwot-Beyene/tenacious-bench.git
+cd tenacious-bench
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+python evaluation/scoring_evaluator.py evaluation/tasks_examples/weak_signal_ask_vs_assert.json
 ```
 
-Act III does **not** run GPU training; Act IV uses Unsloth + Qwen 3.5 per the challenge Production Stack.
+You should see **deterministic JSON scores** for the fixture task (rubric dimensions + pass/fail). This exercises the same `scoring_evaluator.py` used across the 240-task corpus.
 
-### In progress (Acts IV–V)
-- Path B **training run** + HuggingFace dataset/model cards
-- Public blog + community engagement artifact
+### B) Path B held-out Delta A (GPU recommended, ~30–90 min with deps + weights)
 
-## Challenge Requirement Mapping (Reviewer Fast Path)
+Reproduces the **paired bootstrap Delta A** (trained vs baseline) reported on the [model card](https://huggingface.co/hiwot-beyene/tenacious-bench-lora) when `reports/ablation_results.json` matches a full sealed run.
 
-This section maps each Week 11 interim requirement directly to committed artifacts so the repo can be graded without searching.
+```bash
+cd tenacious-bench
+uv sync --extra train
+uv run python scripts/build_heldout_eval_pairs.py
+uv run python scripts/run_sealed_ablation.py --adapter outputs/preference_lora_day5/lora_adapter
+```
 
-| Challenge requirement | Primary artifact(s) |
-|---|---|
-| Audit memo with Week 10 evidence | [`docs/audit_memo.md`](docs/audit_memo.md) |
-| Scoring evaluator with mechanical decomposition + error handling | [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py), [`evaluation/tasks_examples/`](evaluation/tasks_examples/) |
-| Corpus builder + scenarios | [`scripts/build_corpus.py`](scripts/build_corpus.py), [`bench_corpus/`](bench_corpus/) (seeds, scenarios, constants) |
-| Optional LLM synthesis / routing / judge filter | [`generation/generate_tasks.py`](generation/generate_tasks.py) (optional), [`generation/judge_filter.py`](generation/judge_filter.py), [`generation/dedup_pairwise.py`](generation/dedup_pairwise.py), [`generation/contamination_check.py`](generation/contamination_check.py), [`generation/routing_policy.md`](generation/routing_policy.md) |
-| Datasheet (Gebru + Pushkarna layers) | [`docs/datasheet.md`](docs/datasheet.md) |
-| Methodology rationale (Path B + citations + contamination protocol) | [`docs/methodology.md`](docs/methodology.md) |
-| Synthesis memos with critical engagement (4 common) | [`synthesis_memos/`](synthesis_memos/) — Liu, Gu, Gebru/Pushkarna, Chen |
-| Composition + inter-rater + contamination | [`reports/composition_crosstab.md`](reports/composition_crosstab.md), [`reports/composition_actual.json`](reports/composition_actual.json), [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/inter_rater/`](reports/inter_rater/), [`reports/sample_scores.jsonl`](reports/sample_scores.jsonl), [`reports/contamination_check.json`](reports/contamination_check.json) |
-| `tenacious_bench_v0.1/` (partitions + datasheet + contamination + inter-rater + generation_scripts) | [`tenacious_bench_v0.1/`](tenacious_bench_v0.1/), [`scripts/build_tenacious_bench_v01_package.py`](scripts/build_tenacious_bench_v01_package.py) |
-| Materialized dataset + scripts | [`data/tasks_all.jsonl`](data/tasks_all.jsonl), [`data/company_seeds.json`](data/company_seeds.json), [`scripts/build_corpus.py`](scripts/build_corpus.py), [`scripts/verify_composition.py`](scripts/verify_composition.py), [`scripts/compute_inter_rater_agreement.py`](scripts/compute_inter_rater_agreement.py) |
-| Audit probe + catalog + materialized QA | [`bench_corpus/audit_probe_registry.py`](bench_corpus/audit_probe_registry.py), [`scripts/verify_audit_probe_coverage.py`](scripts/verify_audit_probe_coverage.py), [`scripts/verify_scenario_catalog_integrity.py`](scripts/verify_scenario_catalog_integrity.py), [`scripts/verify_materialized_task_coverage.py`](scripts/verify_materialized_task_coverage.py) |
-| Act III Path B (`training_data/`, rationale, path memos) | [`docs/methodology_rationale.md`](docs/methodology_rationale.md), [`training_data/`](training_data/), [`scripts/build_path_b_preferences.py`](scripts/build_path_b_preferences.py), [`scripts/verify_training_data_leakage.py`](scripts/verify_training_data_leakage.py), path memos under [`synthesis_memos/`](synthesis_memos/) (`memo_*_path_b.md`) |
+Inspect `reports/ablation_results.json` → `delta_a_trained_vs_baseline`. To align with the **published adapter**, download it from Hugging Face and pass `--adapter /path/to/lora_adapter`.
 
-Suggested review order (10-minute pass):
-1. `README.md` (this file)
-2. `docs/audit_memo.md` and `docs/methodology.md`
-3. `evaluation/scoring_evaluator.py` and `evaluation/tasks_examples/*.json`
-4. `docs/datasheet.md`
-5. `data/tasks_all.jsonl` + `reports/composition_crosstab.md`
-6. `reports/inter_rater_agreement.md` + `reports/contamination_check.json`
+---
+
+## Setup & dependency pinning
+
+| Mechanism | Purpose |
+|-----------|---------|
+| [`pyproject.toml`](pyproject.toml) | Project metadata + optional extras: `train`, `pdf`, `publish` |
+| [`uv.lock`](uv.lock) | **Locked** dependency versions (primary reproducibility surface for `uv`) |
+| [`requirements.txt`](requirements.txt) | **Pip** install with hashed pins — run `uv export` to refresh (see file header) |
+
+**Recommended install (full Act IV–V):**
+
+```bash
+cd tenacious-bench
+uv sync --extra train --extra pdf --extra publish
+```
+
+**Python:** 3.11+
+
+---
+
+## License
+
+This repository is released under **CC-BY-4.0** — see [`LICENSE`](LICENSE). The published Hugging Face dataset card should stay consistent with that choice (see [`publication/hf_dataset/README.md`](publication/hf_dataset/README.md)).
+
+---
+
+## Attribution & credits
+
+- **Author / maintainer:** Hiwot Beyene — Week 11 Tenacious-Bench submission.
+- **Workflow domain** “Tenacious” is used as an **evaluation** and engineering context only; no proprietary customer content is published here.
+- **Ideas & citations** (synthesis memos and methodology): Liu et al. (synthetic data); Gebru et al., Pushkarna et al. (dataset documentation); Chen et al. (contamination); Gu et al. (LLM-as-judge); Rafailov et al., Meng et al., Hong et al. (preference optimization); Li et al. (preference leakage); and related Path B references in [`docs/methodology_rationale.md`](docs/methodology_rationale.md) and [`synthesis_memos/`](synthesis_memos/).
+- **Software stack:** [PyTorch](https://pytorch.org/), [Hugging Face Transformers / TRL / PEFT / Datasets](https://huggingface.co/docs), base LM [Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct) for the shipped adapter run.
+- **Contrast benchmark:** [τ²-Bench / τ-Bench](https://github.com/sierra-research/tau2-bench) (tool–user–agent retail-style trajectories). Tenacious-Bench targets **B2B outbound policy** dimensions; see [`docs/audit_memo.md`](docs/audit_memo.md).
+
+---
+
+## Act V maintenance commands
+
+```bash
+uv run python scripts/emit_evidence_graph.py
+uv run python scripts/verify_act_v_deliverables.py --strict-urls --require-evidence-graph --require-community-url
+```
+
+---
+
+## Current status (deliverables detail)
+
+### Completed (robust core)
+
+- Audit memo: [`docs/audit_memo.md`](docs/audit_memo.md)
+- Methodology + Path B rationale: [`docs/methodology.md`](docs/methodology.md), [`docs/methodology_rationale.md`](docs/methodology_rationale.md)
+- Mechanical scorer: [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py)
+- Examples + schema: [`evaluation/tasks_examples/`](evaluation/tasks_examples/), [`schema.json`](schema.json)
+- Datasheet: [`docs/datasheet.md`](docs/datasheet.md)
+- **Act II package** generator: [`scripts/build_tenacious_bench_v01_package.py`](scripts/build_tenacious_bench_v01_package.py) → [`tenacious_bench_v0.1/README.md`](tenacious_bench_v0.1/README.md)
+- **Corpus:** [`data/tasks_all.jsonl`](data/tasks_all.jsonl), [`data/company_seeds.json`](data/company_seeds.json), [`scripts/build_corpus.py`](scripts/build_corpus.py)
+- Contamination: [`reports/contamination_check.json`](reports/contamination_check.json)
+- Inter-rater: [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md)
+- Synthesis memos: [`synthesis_memos/`](synthesis_memos/)
+
+### Act III — Path B training data
+
+- [`training_data/preferences.jsonl`](training_data/preferences.jsonl), [`training_data/manifest.json`](training_data/manifest.json)
+- [`scripts/build_path_b_preferences.py`](scripts/build_path_b_preferences.py), [`scripts/verify_training_data_leakage.py`](scripts/verify_training_data_leakage.py)
+
+### Act IV — Train + ablate
+
+- [`training/preference_lora_train.py`](training/preference_lora_train.py)
+- [`scripts/export_unsloth_splits.py`](scripts/export_unsloth_splits.py), [`scripts/build_heldout_eval_pairs.py`](scripts/build_heldout_eval_pairs.py), [`scripts/run_sealed_ablation.py`](scripts/run_sealed_ablation.py)
+- [`scripts/emit_model_card.py`](scripts/emit_model_card.py) → [`reports/model_card.md`](reports/model_card.md)
+
+### Act V — Publish kit
+
+| Deliverable | Location |
+|-------------|----------|
+| URL ledger | [`reports/act_v_urls.json`](reports/act_v_urls.json) |
+| Evidence graph | [`scripts/emit_evidence_graph.py`](scripts/emit_evidence_graph.py) |
+| Verification | [`scripts/verify_act_v_deliverables.py`](scripts/verify_act_v_deliverables.py) |
+| Hub upload helper | [`scripts/hf_act_v_upload_helper.py`](scripts/hf_act_v_upload_helper.py) |
+| Blog source | [`docs/act_v_blog_post.md`](docs/act_v_blog_post.md) |
+| Publish guide | [`docs/act_v_publish_and_community_guide.md`](docs/act_v_publish_and_community_guide.md) |
+
+---
+
+## Challenge requirement mapping (reviewer fast path)
+
+| Requirement | Artifact(s) |
+|-------------|-------------|
+| Audit + Week 10 evidence | [`docs/audit_memo.md`](docs/audit_memo.md) |
+| Scoring evaluator | [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py) |
+| Corpus + scenarios | [`scripts/build_corpus.py`](scripts/build_corpus.py), [`bench_corpus/`](bench_corpus/) |
+| Datasheet | [`docs/datasheet.md`](docs/datasheet.md) |
+| Methodology | [`docs/methodology.md`](docs/methodology.md) |
+| Composition / inter-rater / contamination | [`reports/composition_crosstab.md`](reports/composition_crosstab.md), [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md), [`reports/contamination_check.json`](reports/contamination_check.json) |
+| Act III Path B | [`training_data/`](training_data/), [`scripts/verify_training_data_leakage.py`](scripts/verify_training_data_leakage.py) |
+| Act IV | [`training/preference_lora_train.py`](training/preference_lora_train.py), [`scripts/run_sealed_ablation.py`](scripts/run_sealed_ablation.py), [`reports/training_run.log`](reports/training_run.log), [`reports/ablation_results.json`](reports/ablation_results.json) |
+| Act V | **Public URLs above**, [`reports/evidence_graph.json`](reports/evidence_graph.json), **`memo.pdf`**, this README |
+
+**Suggested 10-minute review:** README → `docs/audit_memo.md` → `evaluation/scoring_evaluator.py` + one example task → `docs/datasheet.md` → HF dataset + model card links.
+
+---
 
 ## Build corpus, QA, and Act II package
 
 ```bash
-python scripts/build_corpus.py              # optional: --refresh-seeds to rebuild company_seeds.json
-python scripts/run_judge_filter_pipeline.py # pointwise judge log → data/judge_filter_log.jsonl (package copies this)
+python scripts/build_corpus.py              # optional: --refresh-seeds
+python scripts/run_judge_filter_pipeline.py
 python scripts/run_contamination_check.py
 python scripts/verify_composition.py
 python scripts/verify_audit_probe_coverage.py
 python scripts/verify_scenario_catalog_integrity.py
 python scripts/verify_materialized_task_coverage.py
 python scripts/compute_inter_rater_agreement.py
-python scripts/build_tenacious_bench_v01_package.py --run-checks   # optional: also pass --rebuild-corpus
+python scripts/build_tenacious_bench_v01_package.py --run-checks
 ```
 
-`--run-checks` re-runs contamination, composition, and inter-rater before copying shards into `tenacious_bench_v0.1/`.
+---
 
-## Environment Setup
+## Run the scoring evaluator (batch)
 
-### Requirements
-- Python **3.11+**
-- Standard library is sufficient for interim evaluator scripts
-- Optional for future pipeline runs: `httpx`, `numpy`, `pandas`, `sentence-transformers`
-
-### Install
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-```
-
-## Run the Scoring Evaluator
-
-Score one sample task:
 ```bash
 python evaluation/scoring_evaluator.py evaluation/tasks_examples/weak_signal_ask_vs_assert.json
-```
-
-Score all current examples:
-```bash
 python evaluation/scoring_evaluator.py evaluation/tasks_examples/*.json
 ```
 
-## Repository Structure
+---
 
-- `docs/` - audit memo, methodology, methodology_rationale (Act III), datasheet
-- `training_data/` - Path B `preferences.jsonl` + `manifest.json` (Act III)
-- `tenacious_bench_v0.1/` - **generated** Act II layout (see `tenacious_bench_v0.1/README.md`; tracked outputs gitignored)
-- `data/` - `company_seeds.json`, materialized task JSONL (train/dev/heldout/all)
-- `bench_corpus/` - seed loader, scenario library, `COMMON_RUBRIC` / task rubric constants (single source for task text)
-- `scripts/` - corpus build, contamination CLI, composition verification, inter-rater tooling, Act II package assembler
-- `evaluation/` - scoring evaluator and example tasks
-- `schema.json` - canonical task object contract for examples and generated tasks
-- `generation/` - synthesis, judge filter, dedup, contamination scaffolds
-- `prompts/` - judge prompt text files (pointwise + pairwise)
-- `reports/` - run reports (contamination, scoring outputs, cost logs)
-- `synthesis_memos/` - paper memos with evidence-backed disagreements
+## Repository structure
 
-## Major Artifact Links
+- `docs/` — audit, methodology, datasheet, Act V writeups
+- `data/` — materialized task JSONL + `company_seeds.json`
+- `training_data/` — Path B preferences + manifest
+- `evaluation/` — scorer + fixtures
+- `bench_corpus/` — scenarios, constants, critic helpers
+- `generation/` — judge filter, contamination, dedup
+- `training/` — `preference_lora_train.py`
+- `scripts/` — build, verify, Act II package, HF helpers, `generate_memo_pdf.py`
+- `reports/` — logs, ablation, `model_card.md`, `act_v_urls.json`, `evidence_graph.json`
+- `publication/` — Hub README templates
+- `synthesis_memos/` — paper memos
 
-- **Layman guide (Conversion Engine data + Tenacious-Bench tasks):** [`docs/Conversion_Engine_and_Tenacious_Bench_Explained.md`](docs/Conversion_Engine_and_Tenacious_Bench_Explained.md)
-- Week 11 challenge brief: [`TRP1 Challenge Week 11_ Sales Agent Evaluation Bench.md`](TRP1%20Challenge%20Week%2011_%20Sales%20Agent%20Evaluation%20Bench.md)
-- Tenacious style guide + good/bad examples: [`Tenacious Style Guide and 12 Good-Bad Examples v2.md`](Tenacious%20Style%20Guide%20and%2012%20Good-Bad%20Examples%20v2.md)
-- Audit memo: [`docs/audit_memo.md`](docs/audit_memo.md)
-- Methodology: [`docs/methodology.md`](docs/methodology.md)
-- Datasheet: [`docs/datasheet.md`](docs/datasheet.md)
-- Evaluator: [`evaluation/scoring_evaluator.py`](evaluation/scoring_evaluator.py)
-- Sample score report: [`reports/sample_scores.jsonl`](reports/sample_scores.jsonl)
-- Interim contamination report: [`reports/contamination_check.json`](reports/contamination_check.json)
+---
+
+## Major links
+
+- Layman guide: [`docs/Conversion_Engine_and_Tenacious_Bench_Explained.md`](docs/Conversion_Engine_and_Tenacious_Bench_Explained.md)
+- Week 11 brief (local): [`TRP1 Challenge Week 11_ Sales Agent Evaluation Bench.md`](TRP1%20Challenge%20Week%2011_%20Sales%20Agent%20Evaluation%20Bench.md)
+- Sample scores: [`reports/sample_scores.jsonl`](reports/sample_scores.jsonl)
 - Cost log: [`reports/cost_log.md`](reports/cost_log.md)
 
-## What Is Next (Acts IV–V)
+---
 
-1. **Act IV:** Train Path B critic with **Unsloth + Qwen 3.5** (0.8B / 2B / 4B) + LoRA on `training_data/preferences.jsonl` (SimPO primary per `docs/methodology_rationale.md`); log loss; run held-out ablations.
-2. Publish HuggingFace dataset + model cards (pinned versions), blog post, and community engagement artifact.
+## Post–Week 11
+
+1. More preference pairs / SimPO–ORPO experiments if Delta A is underpowered.
+2. Optional Zenodo DOI; keep Hub `revision` pins.
+3. Production A/B on real pipelines—bench metrics are necessary, not sufficient.

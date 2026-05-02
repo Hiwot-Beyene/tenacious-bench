@@ -28,6 +28,14 @@ train = [
 # Optional: Unsloth (GPU, CUDA). Often installed per their docs instead of PyPI pin:
 #   uv pip install unsloth
 unsloth = ["unsloth"]
+# Act V: optional Hugging Face Hub uploads (emit_evidence_graph has no extra deps).
+publish = [
+  "huggingface_hub>=0.26.0",
+]
+# Act V: CEO/CFO memo.pdf (two pages per Week 11 final submission).
+pdf = [
+  "fpdf2>=2.8.0",
+]
 
 [dependency-groups]
 dev = []
