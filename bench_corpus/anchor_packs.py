@@ -67,6 +67,16 @@ def build_anchor_ctx(seq: int, capacity_snapshot: Optional[Dict[str, Any]]) -> D
     return ctx
 
 
+def anchor_rotation_indices(seq: int) -> Dict[str, int]:
+    """Deterministic indices into funding/velocity/layoff/leadership pools (see `build_anchor_ctx`)."""
+    return {
+        "funding_line_index": seq % 4,
+        "velocity_line_index": (seq // 3) % 4,
+        "layoff_line_index": (seq // 5) % 3,
+        "leadership_line_index": (seq // 7) % 3,
+    }
+
+
 def slim_capacity_snapshot(raw: Dict[str, Any]) -> Dict[str, Any]:
     """Strip heavy arrays for JSONL; keep counts + deploy days + leadership tallies."""
     out: Dict[str, Any] = {

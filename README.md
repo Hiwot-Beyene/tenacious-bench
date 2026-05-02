@@ -124,7 +124,7 @@ uv run python scripts/verify_act_v_deliverables.py --strict-urls --require-evide
 - Examples + schema: [`evaluation/tasks_examples/`](evaluation/tasks_examples/), [`schema.json`](schema.json)
 - Datasheet: [`docs/datasheet.md`](docs/datasheet.md)
 - **Act II package** generator: [`scripts/build_tenacious_bench_v01_package.py`](scripts/build_tenacious_bench_v01_package.py) → [`tenacious_bench_v0.1/README.md`](tenacious_bench_v0.1/README.md)
-- **Corpus:** [`data/tasks_all.jsonl`](data/tasks_all.jsonl), [`data/company_seeds.json`](data/company_seeds.json), [`scripts/build_corpus.py`](scripts/build_corpus.py)
+- **Corpus:** [`data/tasks_all.jsonl`](data/tasks_all.jsonl), [`data/company_seeds.json`](data/company_seeds.json), [`scripts/build_corpus.py`](scripts/build_corpus.py); **four-mode authoring map:** [`docs/four_mode_authoring.md`](docs/four_mode_authoring.md)
 - Contamination: [`reports/contamination_check.json`](reports/contamination_check.json)
 - Inter-rater: [`reports/inter_rater_agreement.md`](reports/inter_rater_agreement.md)
 - Synthesis memos: [`synthesis_memos/`](synthesis_memos/)

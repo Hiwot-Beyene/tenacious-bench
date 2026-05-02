@@ -43,6 +43,10 @@ Stratification logic:
 - Each partition preserves category distribution so no single split over-represents one failure type.
 - Within category, source-mode quotas are tracked: trace-derived, programmatic sweep, multi-LLM synthesis, hand-authored adversarial.
 
+### Four-mode authoring (implementation evidence)
+
+Tasks carry `source_mode`, structured `authoring_metadata`, and (when applicable) `trace_anchor` / `synthesis_route`. Train-split marginal targets (~30% trace-derived, ~30% programmatic, ~25% multi-LLM synthesis, ~15% hand-authored adversarial) are named in `bench_corpus.constants.SOURCE_MODE_TRAIN_SHARE_TARGETS` with integer counts in `CELL_COUNTS`; `scripts/verify_composition.py` checks realized partitions. A reviewer-facing file→field map lives in [`docs/four_mode_authoring.md`](four_mode_authoring.md).
+
 ## 4) Contamination Checks (committed pipeline)
 
 Canonical script: `generation/contamination_check.py` (CLI: `python scripts/run_contamination_check.py`).

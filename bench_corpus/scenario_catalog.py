@@ -1436,3 +1436,8 @@ SCENARIOS: Dict[str, List[Dict[str, Any]]] = {
     "non_condescending_gap_framing": GAP,
 }
 
+# Week 11: per-row ``authoring_kind`` for hand vs programmatic template pools (see authoring_modes.py).
+from bench_corpus.authoring_modes import tag_scenario_rows  # noqa: E402
+
+tag_scenario_rows(SCENARIOS)
+

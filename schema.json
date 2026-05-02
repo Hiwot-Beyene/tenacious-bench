@@ -85,6 +85,18 @@
         "internal_capacity_snapshot": {
           "type": "object",
           "description": "Slim copy of tenacious_sales_data/seed/bench_summary.json (counts + as_of)."
+        },
+        "trace_anchor": {
+          "type": ["object", "null"],
+          "description": "Structured Week 10 trace binding for trace_derived tasks; null otherwise.",
+          "properties": {
+            "trace_id": { "type": "string" },
+            "lead_id": { "type": "string" }
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "description": "Mirrors task.coverage inside input_context for model-facing provenance."
         }
       }
     },
@@ -187,8 +199,49 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "scenario_catalog_version": { "type": "string" }
+        "scenario_catalog_version": { "type": "string" },
+        "source_mode": {
+          "type": "string",
+          "enum": [
+            "trace_derived",
+            "programmatic",
+            "multi_llm_synthesis",
+            "hand_authored_adversarial"
+          ]
+        },
+        "catalog_authoring_kind": {
+          "type": "string",
+          "enum": ["hand_adversarial", "programmatic_template"]
+        }
       }
+    },
+    "authoring_metadata": {
+      "type": "object",
+      "description": "Structured four-mode authoring record (combinatorial slots, trace anchor, synthesis route, share-target reference). See bench_corpus/authoring_modes.py.",
+      "properties": {
+        "task_source_mode": { "type": "string" },
+        "failure_dimension": { "type": "string" },
+        "catalog_authoring_kind": {
+          "type": "string",
+          "enum": ["hand_adversarial", "programmatic_template"]
+        },
+        "train_share_targets_reference": { "type": "string" },
+        "train_share_target_fractions": { "type": "object" },
+        "combinatorial_slots": { "type": "object" },
+        "corpus_builder_local_idx": { "type": "integer" },
+        "trace_anchor": {
+          "type": ["object", "null"],
+          "properties": {
+            "trace_id": { "type": "string" },
+            "lead_id": { "type": "string" }
+          }
+        },
+        "synthesis_route_model_id": { "type": ["string", "null"] }
+      }
+    },
+    "synthesis_route": {
+      "type": ["string", "null"],
+      "description": "OpenRouter (or compatible) model id for multi_llm_synthesis bulk generation; null for other modes."
     }
   }
 }

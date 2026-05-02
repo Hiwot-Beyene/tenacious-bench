@@ -6,6 +6,19 @@ This is the single canonical corpus builder. It replaces ad-hoc placeholder gene
 tasks reference actual `name` / `domain` / firmographics from `data/company_seeds.json`
 (produced on first run from conversion-engine data).
 
+**Four-mode authoring (Week 11 rubric)** — each task gets ``source_mode`` plus ``authoring_metadata``:
+
+- ``trace_derived``: pairs from ``bench_corpus.seeds.load_trace_anchors`` bound into
+  ``authoring_metadata.trace_anchor`` / ``input_context.trace_anchor``.
+- ``programmatic``: combinatorial sweep — company slots × ``anchor_packs.build_anchor_ctx``;
+  uses catalog rows tagged ``authoring_kind=programmatic_template`` (see ``authoring_modes.tag_scenario_rows``).
+- ``multi_llm_synthesis``: same shell; ``pick_bulk_generator`` supplies ``synthesis_route`` on the task.
+- ``hand_authored_adversarial``: rows tagged ``authoring_kind=hand_adversarial`` only.
+
+Integer counts per (failure_dimension, partition, source_mode): ``bench_corpus.constants.CELL_COUNTS``.
+Train marginal targets (~30/30/25/15): ``SOURCE_MODE_TRAIN_SHARE_TARGETS``. Verification:
+``scripts/verify_composition.py``. Grader map: ``docs/four_mode_authoring.md``.
+
 Outputs:
   data/tasks_{train,dev,heldout}.jsonl, data/tasks_all.jsonl
 """

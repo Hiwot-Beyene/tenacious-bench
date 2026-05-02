@@ -46,6 +46,9 @@ def main() -> None:
             probes = scen.get("audit_probes")
             if not isinstance(probes, list) or not probes:
                 _err(msgs, f"{label}: audit_probes must be non-empty list")
+            kind = scen.get("authoring_kind")
+            if kind not in ("hand_adversarial", "programmatic_template"):
+                _err(msgs, f"{label}: authoring_kind must be set (run scenario_catalog load / tag_scenario_rows)")
             for k in ("brief", "bench", "thread", "body"):
                 blob = str(scen.get(k) or "")
                 if "{" in blob and k != "body":

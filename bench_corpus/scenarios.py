@@ -18,6 +18,7 @@ import json
 from typing import Any, Dict, Optional, Tuple
 
 from bench_corpus.anchor_packs import build_anchor_ctx, slim_capacity_snapshot
+from bench_corpus.authoring_modes import build_authoring_metadata, select_catalog_row
 from bench_corpus.constants import COMMON_RUBRIC
 from bench_corpus.scenario_catalog import SCENARIOS
 from bench_corpus.textsafe import public_company_label, safe_domain_hint
@@ -60,8 +61,7 @@ def build_task_payload(
     synthesis_route: str,
     capacity_snapshot: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    variants = SCENARIOS[failure_dimension]
-    scen = variants[local_idx % len(variants)]
+    scen = select_catalog_row(failure_dimension, local_idx, source_mode, SCENARIOS)
     gt: Dict[str, Any] = json.loads(json.dumps(scen["gt"]))
 
     name = str(company.get("name") or "Prospect")
@@ -120,6 +120,8 @@ def build_task_payload(
         "icp_segment": scen.get("icp_segment"),
         "audit_probes": list(scen.get("audit_probes") or []),
         "scenario_catalog_version": "v0.4_named_grounding_snapshot",
+        "source_mode": source_mode,
+        "catalog_authoring_kind": scen.get("authoring_kind"),
     }
     if scen.get("conversion_engine_refs"):
         coverage["conversion_engine_refs"] = list(scen["conversion_engine_refs"])
@@ -144,6 +146,25 @@ def build_task_payload(
     if capacity_snapshot:
         input_ctx["internal_capacity_snapshot"] = slim_capacity_snapshot(capacity_snapshot)
 
+    if source_mode == "trace_derived" and trace:
+        tid, lead = trace
+        input_ctx["trace_anchor"] = {"trace_id": tid, "lead_id": lead}
+    else:
+        input_ctx["trace_anchor"] = None
+
+    authoring_meta = build_authoring_metadata(
+        source_mode=source_mode,
+        failure_dimension=failure_dimension,
+        seq=seq,
+        local_idx=local_idx,
+        company=company,
+        scen=scen,
+        trace=trace,
+        synthesis_route=synthesis_route,
+        ctx=ctx,
+        capacity_snapshot=capacity_snapshot,
+    )
+
     out: Dict[str, Any] = {
         "task_id": f"tb_v01_{seq:06d}",
         "source_mode": source_mode,
@@ -156,6 +177,7 @@ def build_task_payload(
         "rubric": json.loads(json.dumps(COMMON_RUBRIC)),
         "pass_threshold": 75,
         "coverage": coverage,
+        "authoring_metadata": authoring_meta,
     }
     # Dev-tier bulk synthesis route (multi-LLM slots only); judge logs use `generation/model_routing.py`.
     out["synthesis_route"] = synthesis_route if source_mode == "multi_llm_synthesis" else None
