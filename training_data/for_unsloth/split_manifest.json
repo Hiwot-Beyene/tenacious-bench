@@ -1,5 +1,6 @@
 {
-  "generated_at_utc": "2026-05-02T10:08:35Z",
+  "generated_at_utc": "2026-05-02T11:28:19Z",
+  "dpo_row_format": "trl_conversational_v1",
   "source_preferences": "training_data/preferences.jsonl",
   "n_total": 142,
   "n_train": 128,

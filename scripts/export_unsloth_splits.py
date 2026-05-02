@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Split `training_data/preferences.jsonl` into train/valid JSONL for TRL/Unsloth DPO.
+"""Split `training_data/preferences.jsonl` into train/valid JSONL for TRL DPO.
+
+Rows use TRL *conversational* DPO format (message lists with role/content) so
+`apply_chat_template` tokenization keeps prompt a true prefix of prompt+completion.
+Plain string rows make BPE merge boundaries break TRL's prefix check and flood warnings.
 
 Writes:
   training_data/for_unsloth/train.jsonl
@@ -34,11 +38,15 @@ def _load_prefs(path: Path) -> List[Dict[str, Any]]:
     return rows
 
 
-def _unsloth_row(p: Dict[str, Any]) -> Dict[str, str]:
+def _trl_conversational_dpo_row(p: Dict[str, Any]) -> Dict[str, Any]:
+    """One preference example as TRL conversational DPO (see trl.data_utils.is_conversational)."""
+    pt = str(p.get("prompt") or "").strip()
+    ch = str(p.get("chosen") or "").strip()
+    rj = str(p.get("rejected") or "").strip()
     return {
-        "prompt": str(p.get("prompt") or ""),
-        "chosen": str(p.get("chosen") or ""),
-        "rejected": str(p.get("rejected") or ""),
+        "prompt": [{"role": "user", "content": pt}],
+        "chosen": [{"role": "assistant", "content": ch}],
+        "rejected": [{"role": "assistant", "content": rj}],
     }
 
 
@@ -59,8 +67,8 @@ def main() -> None:
     rnd.shuffle(order)
     n_val = max(1, int(len(rows) * args.valid_fraction)) if len(rows) >= 10 else max(1, len(rows) // 5)
     val_set = set(order[:n_val])
-    train_rows = [_unsloth_row(rows[i]) for i in range(len(rows)) if i not in val_set]
-    val_rows = [_unsloth_row(rows[i]) for i in range(len(rows)) if i in val_set]
+    train_rows = [_trl_conversational_dpo_row(rows[i]) for i in range(len(rows)) if i not in val_set]
+    val_rows = [_trl_conversational_dpo_row(rows[i]) for i in range(len(rows)) if i in val_set]
     if not train_rows:
         raise SystemExit("train split empty; lower --valid-fraction")
 
@@ -74,6 +82,7 @@ def main() -> None:
 
     manifest = {
         "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "dpo_row_format": "trl_conversational_v1",
         "source_preferences": str(args.preferences.relative_to(REPO_ROOT)),
         "n_total": len(rows),
         "n_train": len(train_rows),

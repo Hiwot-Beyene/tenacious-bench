@@ -26,6 +26,8 @@ Usage:
   uv run python scripts/export_unsloth_splits.py
   uv run python training/preference_lora_train.py --output-dir outputs/preference_lora_run1
 
+`for_unsloth/*.jsonl` must be regenerated with `export_unsloth_splits.py` (TRL conversational DPO rows).
+
 Deliverable `training_run.log`: hyperparameters are logged; train/eval curves live in
 `training_run_metrics.jsonl` when validation is enabled (omit `--skip-eval` for the real Day-5 run).
 """
